@@ -15,7 +15,7 @@ project "lyra.tests"
     }
 
    includedirs { 
-    "%{BASE_DIR}packages/Lyra/include",
+    "%{BASE_DIR}packages/Lyra",
     "%{BASE_DIR}external/googletest/googletest/include",
     "%{BASE_DIR}external/googletest/googlemock/include",
     "%{BASE_DIR}external/googletest/googletest",

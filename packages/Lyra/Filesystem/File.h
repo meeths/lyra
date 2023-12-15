@@ -1,0 +1,34 @@
+#pragma once
+#include <Filesystem/IFile.h>
+#include <String/String.h>
+#include <fstream>
+#include <core/CoreDefines.h>
+
+namespace lyra
+{
+
+class File : public IFile
+{
+public:
+	explicit File(StringView filename) : mFileName(filename) {}
+	DeclareNonCopyable(File);
+	DeclareDefaultMoveable(File);
+
+
+	~File() override;
+	void Open(FileConstants::OpenMode openMode) override;
+	bool IsOpen() override;
+	void Close() override;
+	unsigned long Read(void* buffer, unsigned long size, unsigned long elementSize) override;
+	unsigned long Write(const void* buffer, unsigned long size, unsigned long elementSize) override;
+	unsigned long GetPosition() override;
+	void SetPosition(unsigned long position, FileConstants::PositionOrigin origin) override;
+
+	std::fstream& GetStream() { return mStream; }
+private:
+	std::fstream mStream;
+	String mFileName;
+
+};
+
+}

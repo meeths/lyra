@@ -16,9 +16,9 @@ project "lyra.app.editor"
     }
 
     includedirs {
-        "%{BASE_DIR}packages/Lyra/include",
-        "%{BASE_DIR}packages/LyraEditor/include",
-        "%{BASE_DIR}packages/LyraApplication/include"
+        "%{BASE_DIR}packages/Lyra",
+        "%{BASE_DIR}packages/LyraEditor",
+        "%{BASE_DIR}packages/LyraApplication"
     }
 
     filter { "system:windows" }

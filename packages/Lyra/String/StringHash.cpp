@@ -1,0 +1,31 @@
+#include <String/StringHash.h>
+#include <Core/Hash/Hashes.h>
+
+namespace lyra
+{
+    ConstStringHash::operator StringHash() const
+    {
+        { return StringHash(mHash); };
+    }
+
+    StringHash::StringHash(const char* _string)
+    {
+        mId = murmur::StaticHashValueInternal32(_string, strlen(_string), defaultHashSeed);//MurmurHash64A(_string, int(strlen(_string)), defaultHashSeed);
+#ifdef _DEBUG
+        _debugOriginalString = _string;
+#endif
+    }
+
+    StringHash::StringHash(const String &_string)
+    {
+        mId = murmur::StaticHashValueInternal32(_string.c_str(), strlen(_string.c_str()), defaultHashSeed);//MurmurHash64A(_string.c_str(), int(_string.size()), defaultHashSeed);
+#ifdef _DEBUG
+        _debugOriginalString = _string;
+#endif
+    }
+
+    bool operator==(const ConstStringHash& a, const StringHash& b)
+    {
+            return StringHash(a) == b;
+    }
+}

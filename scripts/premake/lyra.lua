@@ -17,7 +17,7 @@ project "lyra.core"
     }
 
     includedirs {
-        "%{BASE_DIR}packages/Lyra/include"
+        "%{BASE_DIR}packages/Lyra"
     }
 
     configureFlags()
