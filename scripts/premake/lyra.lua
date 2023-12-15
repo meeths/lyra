@@ -23,7 +23,7 @@ project "lyra.core"
     configureFlags()
 
     -- External libraries
-    includeALL()
+    includeCore()
     -- End external libraries
 
     setConfigurations()

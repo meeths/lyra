@@ -23,14 +23,10 @@ project "lyra.app.editor"
 
     filter { "system:windows" }
         fastuptodate ("Off")
-        postbuildcommands { "robocopy ../packages/Lyra/shaders %{cfg.buildtarget.directory}shaders /s /NJS /NJH /NDL /NP /NC /NS" }
         
     configureFlags()
 
     -- External libraries
-    includeALL()
-    includeImGui()
-    linkALL()
     -- End external libraries
 
     setConfigurations()

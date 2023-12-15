@@ -5,12 +5,9 @@ project "lyra.extern"
     targetdir "%{BASE_DIR}bin/%{cfg.buildcfg}"
 
     -- External libraries
-    includeJq()
-    compileJq()
 
     includeImGui()
     compileImGui()
-
     -- End external libraries
     configureFlags()
 

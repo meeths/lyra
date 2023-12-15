@@ -21,8 +21,6 @@ project "lyra.editor"
     configureFlags()
 
     -- External libraries
-    includeALL()
-    includeImGui()
     -- End external libraries
 
     setConfigurations()
