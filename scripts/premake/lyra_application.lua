@@ -2,7 +2,7 @@ group "20 app"
 
 project "lyra.app"
     kind "ConsoleApp"
-    links { "lyra.core" }
+    links { "lyra.core", "lyra.render" }
     language "C++"
     targetdir "%{BASE_DIR}bin/lyra.app/%{cfg.buildcfg}"
     
@@ -34,7 +34,7 @@ project "lyra.app"
 
 project "lyra.app.editor"
     kind "ConsoleApp"
-    links { "lyra.core" ,"lyra.editor" }
+    links { "lyra.core" , "lyra.render", "lyra.editor" }
 
     language "C++"
     targetdir "%{BASE_DIR}bin/lyra.app.editor./%{cfg.buildcfg}"

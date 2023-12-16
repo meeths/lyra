@@ -31,3 +31,42 @@ project "lyra.core"
     setConfigurations()
 
     filter {}
+
+project "lyra.render"
+    kind "StaticLib"
+    language "C++"
+    targetdir "%{BASE_DIR}bin/%{cfg.buildcfg}"
+    
+    files {
+        "%{BASE_DIR}packages/LyraRender/**.h",
+        "%{BASE_DIR}packages/LyraRender/**.hpp",
+        "%{BASE_DIR}packages/LyraRender/**.inl",
+        "%{BASE_DIR}packages/LyraRender/**.cpp",
+        "%{BASE_DIR}packages/LyraRender/**.c"
+    }
+    
+    includedirs {
+        "%{BASE_DIR}packages/Lyra",
+        "%{BASE_DIR}packages/LyraRender"
+    }
+
+    links { "lyra.core" }
+
+    configureFlags()
+    
+    -- External libraries
+    includeTaskFlow()
+    includeEntt()
+    includeTracy()
+    includeGLFW()
+    includeVulkan()
+
+    links { "lyra.external.tracy" }
+    linkGLFW()
+    linkVulkan()
+    
+    -- End external libraries
+    
+    setConfigurations()
+    
+    filter {}
