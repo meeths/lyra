@@ -7,6 +7,9 @@
 #include <Core/CoreDefines.h>
 #include <Containers/Vector.h>
 
+#include <codecvt>
+#include <locale>
+
 namespace lyra
 {
 
@@ -78,6 +81,15 @@ namespace StringUtils
     {
         std::vector<char> strVector(_src.begin(), _src.end());
         return strVector;
+    }
+
+    inline WString ToWstring(String& _string)
+    {
+        Vector<wchar_t> buf(_string.size());
+        std::use_facet<std::ctype<wchar_t>>(std::locale()).widen(_string.data(),
+            _string.data() + _string.size(),
+            buf.data());
+        return {buf.data(), buf.size()};
     }
 };
 
