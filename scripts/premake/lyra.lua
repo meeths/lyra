@@ -1,12 +1,9 @@
-include "scripts/premake/lyra_extern.lua"
-
 group "core"
 
 project "lyra.core"
     kind "StaticLib"
     language "C++"
     targetdir "%{BASE_DIR}bin/%{cfg.buildcfg}"
-    links { "lyra.extern" }
 
     files { 
         "%{BASE_DIR}packages/Lyra/**.h", 
@@ -23,7 +20,7 @@ project "lyra.core"
     configureFlags()
 
     -- External libraries
-    includeCore()
+    includeTaskFlow()
     -- End external libraries
 
     setConfigurations()

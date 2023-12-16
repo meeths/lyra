@@ -5,6 +5,9 @@ project "lyra.editor"
     language "C++"
     targetdir "%{BASE_DIR}bin/%{cfg.buildcfg}"
 
+    links { "lyra.external.imgui" }
+
+
     files { 
         "%{BASE_DIR}packages/LyraEditor/**.h", 
         "%{BASE_DIR}packages/LyraEditor/**.hpp", 

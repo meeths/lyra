@@ -23,7 +23,6 @@ project "lyra.tests"
    }
 
     -- External libraries
-    includeCore()
     -- End external libraries
 
     configureFlags()
