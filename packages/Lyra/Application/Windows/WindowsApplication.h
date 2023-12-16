@@ -3,6 +3,7 @@
 #include <Application/Windows/ApplicationWindow.h>
 #include <Memory/SharedPointer.h>
 #include <Threading/TaskGraphExecutorThreadObserver.h>
+#include <Engine/EngineLoop.h>
 
 namespace lyra
 {
@@ -23,10 +24,12 @@ public:
 	
 	void Run() override;
 	ApplicationWindow& GetMainWindow() const { return *m_applicationWindow; }
-	TaskGraphExecutor& GetTaskGraphExecutor() override { return m_taskGraphExecutor; };
+	TaskGraphExecutor& GetTaskGraphExecutor() override { return m_taskGraphExecutor; }
+	EngineLoop& GetEngineLoop() override { return m_engineLoop; }
 private:
 	CreationInfo m_creationInfo;
-	
+
+	EngineLoop m_engineLoop;
 	UniquePointer<ApplicationWindow> m_applicationWindow;
 	TaskGraphExecutor m_taskGraphExecutor;
 	SharedPointer<TaskGraphExecutorThreadObserver> m_taskGraphThreadObserver;

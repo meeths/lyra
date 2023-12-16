@@ -39,7 +39,10 @@ WindowsApplication::WindowsApplication(CreationInfo _creationInfo)
 {
 	m_applicationWindow = MakeUniquePointer<ApplicationWindow>(m_creationInfo.m_mainWindowSize, m_creationInfo.m_fullScreen, m_creationInfo.m_windowName);
 	m_taskGraphThreadObserver = m_taskGraphExecutor.make_observer<TaskGraphExecutorThreadObserver>("Observer", OnFrameGraphSetup, OnFrameGraphStart, OnFrameGraphEnd);
-	
+
+	// End frame
+	m_engineLoop.AddExecutionUnit(EngineLoop::Phase::EndFrame,
+		Task([&applicationWindow = *m_applicationWindow](float){ applicationWindow.Update();}));
 }
 //----------------------------------------------------------------------------------------------------------------------
 WindowsApplication::~WindowsApplication()
@@ -58,7 +61,7 @@ void WindowsApplication::Run()
 	while (!m_applicationWindow->CloseRequested())
 	{
 		const auto deltaTime = chrono.Lap<float, TimeTypes::Seconds>();
-		
+		m_engineLoop.Step(deltaTime);
 		ProfileFrameMark;
 	}
 }
