@@ -7,3 +7,6 @@
 [submodule "external/taskflow"]
 	path = external/taskflow
 	url = https://github.com/taskflow/taskflow.git
+[submodule "external/entt"]
+	path = external/entt
+	url = https://github.com/skypjack/entt.git

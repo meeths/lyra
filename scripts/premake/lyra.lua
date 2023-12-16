@@ -21,6 +21,7 @@ project "lyra.core"
 
     -- External libraries
     includeTaskFlow()
+    includeEntt()
     -- End external libraries
 
     setConfigurations()
