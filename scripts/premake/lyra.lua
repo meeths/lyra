@@ -22,6 +22,10 @@ project "lyra.core"
     -- External libraries
     includeTaskFlow()
     includeEntt()
+    includeTracy()
+
+    links { "lyra.external.tracy" }
+
     -- End external libraries
 
     setConfigurations()

@@ -1,8 +1,7 @@
 #include <Application/Windows/WindowsApplication.h>
 #include <Time/Chronometer.h>
 #include <Time/TimeTypes.h>
-
-#include <utility>
+#include <Profiler/Profiler.h>
 
 namespace lyra
 {
@@ -28,6 +27,7 @@ void WindowsApplication::Run()
 	{
 		const auto deltaTime = chrono.Lap<float, TimeTypes::Seconds>();
 		m_applicationWindow->Update();
+		ProfileFrameMark;
 	};
 }
 }

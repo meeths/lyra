@@ -3,6 +3,8 @@
 #include <Core/CoreDefines.h>
 #include <String/StringUtils.h>
 
+#include <Profiler/Profiler.h>
+
 namespace lyra
 {
     ApplicationWindow::ApplicationWindow(const Math::Vector2i& size, bool _fullscreen, String& _windowName)
@@ -113,6 +115,8 @@ namespace lyra
 
     void ApplicationWindow::Update()
     {
+        ProfileScoped;
+        
         MSG msg;
         ZeroMemory(&msg, sizeof(msg));
         if (PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))
