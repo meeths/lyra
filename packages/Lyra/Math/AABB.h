@@ -1,15 +1,16 @@
 #pragma once
 #include <Math/Vector3f.h>
 #include <Math/Matrix44.h>
+
 namespace lyra
 {
-namespace Math
+    namespace Math
 {
 	class AABB
 	{
 	public:
 		AABB() : m_Valid{false} {};
-		AABB(Vector3f _min, Vector3f _max) : m_Min(_min), m_Max(_max), m_Valid{true} {};
+		AABB(Vector3f _min, Vector3f _max) : m_Min(std::move(_min)), m_Max(std::move(_max)), m_Valid{true} {};
 		bool IsValid() const { return m_Valid; };
 		const Vector3f& GetMin() const {return m_Min;};
 		const Vector3f& GetMax() const {return m_Max;};

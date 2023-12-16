@@ -14,9 +14,11 @@ namespace Math
 		static const Matrix44 Zero;
 		static const Matrix44 Identity;
 
-		Matrix44() {};
-        Matrix44(const Matrix44& o);
+		Matrix44() = default;
         Matrix44(const Matrix33& o);
+		DeclareDefaultMoveable(Matrix44);
+		DeclareDefaultCopyable(Matrix44);
+		~Matrix44() = default;
 
 		Matrix44(float a11, float a12, float a13, float a14,
 			float a21, float a22, float a23, float a24,
@@ -306,13 +308,6 @@ namespace Math
 
 }
 
-inline lyra::Math::Matrix44::Matrix44(const Matrix44 & o)
-{
-	m[0] = o.m[0];
-	m[1] = o.m[1];
-	m[2] = o.m[2];
-	m[3] = o.m[3];
-}
 
 
 inline lyra::Math::Matrix44::Matrix44(const Matrix33 & o)

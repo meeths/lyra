@@ -12,9 +12,11 @@ public:
     static const Matrix33 Identity;
 
 	Matrix33() = default;
-    Matrix33(const Matrix33& v) : m{ v.m[0], v.m[1], v.m[2] }{};
     Matrix33(const Vector3f& i, const Vector3f& j, const Vector3f& k) : m{ i, j, k } {};
     explicit Matrix33(float f) : m{ {f,f,f} ,{f,f,f} ,{f,f,f} } {};
+    DeclareDefaultMoveable(Matrix33);
+    DeclareDefaultCopyable(Matrix33);
+    ~Matrix33() = default;
 
     Matrix33(float a11, float a12, float a13,
         float a21, float a22, float a23,

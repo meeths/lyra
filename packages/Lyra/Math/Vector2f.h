@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Math/Functions.h>
+#include <Core/CoreDefines.h>
 
 namespace lyra
 {
@@ -19,6 +20,8 @@ public:
     Vector2f(float x, float y) : x{ x }, y{ y } {};
     Vector2f(const Vector2f& v) : x{ v.x }, y{ v.y } {};
     explicit Vector2f(float f) : x{ f }, y{ f } {};
+	DeclareDefaultMoveable(Vector2f);
+	~Vector2f() = default;
 
     Vector2f& operator = (const Vector2f& v) { x = v.x; y = v.y; return *this; }
     Vector2f& operator = (float f) { x = f; y = f; return *this; };

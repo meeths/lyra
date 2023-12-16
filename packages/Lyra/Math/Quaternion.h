@@ -20,6 +20,9 @@ public:
 	Quaternion(const Quaternion& v) : x{ v.x }, y{ v.y }, z{ v.z }, w{v.w} {}
 	Quaternion(const Vector4f& v) : x{ v.x }, y{ v.y }, z{ v.z }, w{v.w} {}
 	explicit Quaternion(float f) : x{ f }, y{ f }, z{ f }, w{ f } {}
+	DeclareDefaultMoveable(Quaternion);
+	~Quaternion() = default;
+
 
 	Quaternion& operator= (const Quaternion& q)
 	{
@@ -48,36 +51,34 @@ public:
 
     Quaternion operator* (const Quaternion& _other) const
     {
-        return Quaternion
-        (
-            w * _other.x + x * _other.w + y * _other.z - z * _other.y,
+        return {
+	        w * _other.x + x * _other.w + y * _other.z - z * _other.y,
             w * _other.y + y * _other.w + z * _other.x - x * _other.z,
             w * _other.z + z * _other.w + x * _other.y - y * _other.x,
             w * _other.w - x * _other.x - y * _other.y - z * _other.z
-            );
+        };
     }
 
     Quaternion operator/ (const Quaternion& _other) const
 	{
-	    return Quaternion
-	    (
-	    w *  _other.x + x * _other.w + y * _other.z - z * _other.y,
+	    return {
+		    w *  _other.x + x * _other.w + y * _other.z - z * _other.y,
         w * _other.y + y * _other.w + z * _other.x - x * _other.z,
         w * _other.z + z * _other.w + x * _other.y - y * _other.x,
-        w * _other.w - x * _other.x - y * _other.y - z * _other.z);
+        w * _other.w - x * _other.x - y * _other.y - z * _other.z
+	    };
 	}
 
     Quaternion operator/ (float _f) const
 	{
-	    return Quaternion(x/_f, y/_f, z/_f, w/_f);
+	    return {x/_f, y/_f, z/_f, w/_f};
 	}
 
     Vector3f operator* (const Vector3f& _vector) const
     {
-        Vector3f uv, uuv;
-        Vector3f qvec(x, y, z);
-        uv = qvec.Cross(_vector);
-        uuv = qvec.Cross(uv);
+	    const Vector3f qvec(x, y, z);
+        Vector3f uv = qvec.Cross(_vector);
+        Vector3f uuv = qvec.Cross(uv);
         uv = uv * (2.0f * w);
         uuv = uv * 2.0f;
 

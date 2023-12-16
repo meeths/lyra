@@ -1,6 +1,7 @@
 #pragma once
 #include <Math/Vector2f.h>
 #include <Math/Functions.h>
+#include <Core/CoreDefines.h>
 
 namespace lyra
 {
@@ -14,6 +15,8 @@ namespace Math
 		static const Vector3f UnitY;
 		static const Vector3f UnitZ;
 		static const Vector3f One;
+		DeclareDefaultMoveable(Vector3f);
+		~Vector3f() = default;
 
 		Vector3f() = default;
 		Vector3f(float x, float y, float z) : x{ x }, y{ y }, z{ z } {};

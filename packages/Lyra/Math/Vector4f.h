@@ -1,6 +1,7 @@
 #pragma once
 #include <Math/Functions.h>
 #include <Math/Vector3f.h>
+#include <Core/CoreDefines.h>
 
 namespace lyra
 {
@@ -21,7 +22,9 @@ namespace Math
 		Vector4f(float x, float y, float z, float w) : x{ x }, y{ y }, z{ z }, w{ w } {}
 		Vector4f(const Vector4f& v) : x{ v.x }, y{ v.y }, z{ v.z }, w{ v.w } {}
 		explicit Vector4f(const Vector3f& v) : x{ v.x }, y{ v.y }, z{ v.z }, w{ 1.0f } {}
-		explicit Vector4f(const float f) : x{ f }, y{ f }, z{ f }, w{ f } {};
+		explicit Vector4f(const float f) : x{ f }, y{ f }, z{ f }, w{ f } {}
+		DeclareDefaultMoveable(Vector4f);
+		~Vector4f() = default;
 
         Vector4f& operator = (const Vector4f& v) { x = v.x; y = v.y; z = v.z; w = v.w; return *this; };
         Vector4f& operator = (float f) { x = f; y = f; z = f; w = f; return *this; };

@@ -1,10 +1,5 @@
 #pragma once
 #include <cmath>
-#include <algorithm>
-// #ifdef max 
-// #undef max
-// #undef min
-// #endif
 
 namespace lyra { namespace Math
 {
@@ -32,7 +27,10 @@ namespace lyra { namespace Math
 
 	template <typename T> T Log2(const T& a) { return static_cast<T>(std::log2(a)); };
 
-	inline int NextPowerOf2(int val) { return (int)pow(2, (int)ceil(log(val) / log(2))); }
+	inline int NextPowerOf2(int val)
+	{
+		return static_cast<int>(pow(2, static_cast<int>(ceil(log(val) / log(2)))));
+	}
 
 	static constexpr float Pi{ 3.14159265358979f };
 	static constexpr float HalfPi{ 3.14159265358979f / 2.0f };
