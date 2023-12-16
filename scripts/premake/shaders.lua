@@ -1,4 +1,4 @@
-group "scripts"
+group "99 scripts"
 
 project "lyra.shaders"
     kind "Utility"

@@ -1,4 +1,4 @@
-group "core"
+group "00 engine"
 
 project "lyra.core"
     kind "StaticLib"

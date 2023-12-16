@@ -1,4 +1,4 @@
-group "editor"
+group "10 editor"
 
 project "lyra.editor"
     kind "StaticLib"

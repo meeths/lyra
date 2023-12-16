@@ -1,4 +1,4 @@
-group "tests"
+group "40 tests"
 
 project "lyra.tests"
     kind "ConsoleApp"
