@@ -4,6 +4,7 @@
 #include <Memory/SharedPointer.h>
 #include <String/String.h>
 #include <Containers/Vector.h>
+#include <Threading/SRWLock.h>
 
 #define lyraLogError(x, ...) lyra::Log::Instance().LogError(x, __VA_ARGS__)
 #define lyraLogWarning(x, ...) lyra::Log::Instance().LogWarning(x, __VA_ARGS__)
@@ -33,6 +34,7 @@ private:
 	void NotifyDetail(LogType logType, StringView title, const char* fmt, va_list args);
 	void NotifyDetail(LogType logType, StringView title, StringView body, uint32_t step, uint32_t numSteps);
 	
-	Vector<SharedPointer<ILogger>> mLoggers;
+	Vector<SharedPointer<ILogger>> m_Loggers;
+	SRWLock m_loggersLock;
 };
 }

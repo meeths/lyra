@@ -11,7 +11,8 @@ namespace lyra
 {
 	void Log::RegisterLogger(SharedPointer<ILogger> _logger)
 	{
-		mLoggers.emplace_back(std::move(_logger));
+		SRWScopedWriteLock lock(m_loggersLock);
+		m_Loggers.emplace_back(std::move(_logger));
 	}
 
 	void Log::LogWarning(const char* fmt, ...)
@@ -40,11 +41,13 @@ namespace lyra
 
 	void Log::LogDetail(LogType logType, const char* fmt, va_list args)
 	{
+		SRWScopedReadLock lock(m_loggersLock);
+		
 		Array<char, 2048> buffer;
 
 		vsnprintf(buffer.data(), buffer.size(), fmt, args);
 
-		for (auto& logger : mLoggers)
+		for (auto& logger : m_Loggers)
 		{
 			logger->Log(logType, String(buffer.data()));
 		}
