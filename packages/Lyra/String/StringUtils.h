@@ -83,7 +83,7 @@ namespace StringUtils
         return strVector;
     }
 
-    inline WString ToWstring(String& _string)
+    inline WString ToWstring(const String& _string)
     {
         Vector<wchar_t> buf(_string.size());
         std::use_facet<std::ctype<wchar_t>>(std::locale()).widen(_string.data(),

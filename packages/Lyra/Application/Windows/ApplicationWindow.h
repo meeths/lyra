@@ -15,7 +15,7 @@ namespace lyra
 	class ApplicationWindow
 {
 public:
-	ApplicationWindow(const Math::Vector2i& size, bool _fullscreen, String& _windowName);
+	ApplicationWindow(const Math::Vector2i& size, bool _fullscreen, const String& _windowName);
 	
 	void RequestClose() { mCloseRequested = true; }
 	bool CloseRequested() const { return mCloseRequested; }

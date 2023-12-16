@@ -7,7 +7,7 @@
 
 namespace lyra
 {
-    ApplicationWindow::ApplicationWindow(const Math::Vector2i& size, bool _fullscreen, String& _windowName)
+    ApplicationWindow::ApplicationWindow(const Math::Vector2i& size, bool _fullscreen, const String& _windowName)
     {
         mFullScreen = _fullscreen;
 
