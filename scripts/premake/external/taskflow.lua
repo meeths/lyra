@@ -7,6 +7,7 @@
 function includeTaskFlow()
     filter {}
     includedirs "%{BASE_DIR}external/taskflow/taskflow"
+    defines "TF_DISABLE_EXCEPTION_HANDLING"
 end
 
 function compileTaskFlow()

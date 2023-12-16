@@ -1,5 +1,5 @@
 #pragma once
-#include <Core/Types.h>
+#include <Threading/TaskGraphExecutor.h>
 
 namespace lyra
 {
@@ -11,6 +11,7 @@ class IApplication
 public:
 	virtual ~IApplication() = default;
 	virtual void Run() = 0;
+	virtual TaskGraphExecutor& GetTaskGraphExecutor() = 0;
 };
 
 }

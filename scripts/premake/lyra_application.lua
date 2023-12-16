@@ -25,6 +25,7 @@ project "lyra.app"
     configureFlags()
     
     -- External libraries
+    includeTaskFlow()
     -- End external libraries
     
     setConfigurations()
@@ -60,6 +61,7 @@ project "lyra.app.editor"
     -- External libraries
     links { "lyra.external.imgui" }
     includeImGui()
+    includeTaskFlow()
     -- End external libraries
 
     setConfigurations()
