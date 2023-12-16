@@ -9,6 +9,7 @@ function configureFlags()
     defines { "NOMINMAX" }
     cppdialect "C++20"
     editAndContinue "Off"
+    exceptionhandling "Off"
 end
 
 function setConfigurations()
@@ -19,7 +20,7 @@ function setConfigurations()
 
     filter "configurations:Release"
         defines { "NDEBUG" }
-        optimize "On"
+        optimize "Speed"
         runtime "Release"
 end
 
