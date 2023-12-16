@@ -1,4 +1,4 @@
-BASE_DIR = _MAIN_SCRIPT_DIR
+BASE_DIR = _MAIN_SCRIPT_DIR .. "/"
 
 function configureFlags()
     flags { "FatalWarnings", "MultiProcessorCompile" }    
