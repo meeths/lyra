@@ -67,9 +67,20 @@ LRESULT WindowMessageLoop::Win32MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPAR
         }
         return 0;
     case WM_SETCURSOR:
-        if(LOWORD(lParam) == HTCLIENT)
-            SetCursor(nullptr);
-        return 0;
+        {
+            WORD ht = LOWORD(lParam);
+            static bool hiddencursor = false;
+            if (HTCLIENT==ht && !hiddencursor)
+            {
+                hiddencursor = true;
+                ShowCursor(false);
+            }
+            else if (HTCLIENT!=ht && hiddencursor) 
+            {
+                hiddencursor = false;
+                ShowCursor(true);
+            }
+        }
         
     default: break;
     }
