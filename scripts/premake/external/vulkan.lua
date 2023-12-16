@@ -5,7 +5,6 @@
 ---
 function includeVulkan()
     includedirs "%{BASE_DIR}external/vulkan_1.2.198.1/Include"
-
 end
 
 function linkVulkan()

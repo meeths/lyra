@@ -26,6 +26,12 @@ project "lyra.app"
     
     -- External libraries
     includeTaskFlow()
+    includeGLFW()
+    includeVulkan()
+
+    linkGLFW()
+    linkVulkan()
+
     -- End external libraries
     
     setConfigurations()
@@ -62,7 +68,13 @@ project "lyra.app.editor"
     links { "lyra.external.imgui" }
     includeImGui()
     includeTaskFlow()
-    -- End external libraries
+    includeGLFW()
+    includeVulkan()
+
+    linkGLFW()
+    linkVulkan()
+
+ -- End external libraries
 
     setConfigurations()
 

@@ -62,9 +62,6 @@ project "lyra.render"
     includeVulkan()
 
     links { "lyra.external.tracy" }
-    linkGLFW()
-    linkVulkan()
-    
     -- End external libraries
     
     setConfigurations()
