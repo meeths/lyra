@@ -7,6 +7,3 @@
 [submodule "external/taskflow"]
 	path = external/taskflow
 	url = https://github.com/taskflow/taskflow.git
-[submodule "extrernal/taskflow"]
-	path = extrernal/taskflow
-	url = https://github.com/taskflow/taskflow.git
