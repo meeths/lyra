@@ -2,8 +2,10 @@
 #pragma once
 
 // Created on 2023-11-15 by sisco
+#include <Core/Optional.h>
+#include <Memory/SharedPointer.h>
+#include <Memory/UniquePointer.h>
 #include <String/String.h>
-#include <Core/Types.h>
 
 namespace lyra
 {
@@ -21,21 +23,21 @@ public:
             return located;
         }
         
-        if(mNextFileLocator)
-            return mNextFileLocator->Locate(path);
+        if(m_NextFileLocator)
+            return m_NextFileLocator->Locate(path);
 
         return {};
     }
     
     IFileLocator& SetNextFileLocator(UniquePointer<IFileLocator> locator)
     {
-        mNextFileLocator = std::move(locator);
-        return *mNextFileLocator;
+        m_NextFileLocator = std::move(locator);
+        return *m_NextFileLocator;
     }
     
 protected:
     virtual Optional<SharedPointer<IFile>> LocateInternal(StringView path) = 0;
-    UniquePointer<IFileLocator> mNextFileLocator;
+    UniquePointer<IFileLocator> m_NextFileLocator;
 };
 
 }

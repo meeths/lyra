@@ -19,28 +19,28 @@ void File::Open(FileConstants::OpenMode openMode)
 	if(openMode & FileConstants::OpenMode::AtEnd) stdBitmask |= std::ios::ate;
 	if(openMode & FileConstants::OpenMode::Truncate) stdBitmask |= std::ios::trunc;
 
-	mStream.open(mFileName, stdBitmask);
+	m_Stream.open(m_FileName, stdBitmask);
 }
 
 bool File::IsOpen()
 {
-	return mStream.is_open();
+	return m_Stream.is_open();
 }
 
 void File::Close()
 {
-	mStream.close();
+	m_Stream.close();
 }
 
 unsigned long File::Read(void* buffer, unsigned long size, unsigned long elementSize)
 {
 	if(!IsOpen())
 		throw::std::runtime_error("Reading closed file");
-	mStream.read(static_cast<char*>(buffer), size * elementSize);
-	if(mStream)
+	m_Stream.read(static_cast<char*>(buffer), size * elementSize);
+	if(m_Stream)
 		return size * elementSize;
 	// Could not read the requested number of bytes
-	return static_cast<unsigned long>(mStream.gcount());
+	return static_cast<unsigned long>(m_Stream.gcount());
 }
 
 unsigned long File::Write(const void* buffer, unsigned long size, unsigned long elementSize)
@@ -48,7 +48,7 @@ unsigned long File::Write(const void* buffer, unsigned long size, unsigned long 
 	if(!IsOpen())
 		throw::std::runtime_error("Writing closed file");
 
-	mStream.write(static_cast<const char*>(buffer), size * elementSize);
+	m_Stream.write(static_cast<const char*>(buffer), size * elementSize);
 	return size * elementSize;
 }
 
@@ -56,7 +56,7 @@ unsigned long File::Write(const void* buffer, unsigned long size, unsigned long 
 {
 	if(!IsOpen())
 		throw::std::runtime_error("Reading closed file");
-	return static_cast<unsigned long>(mStream.tellg());
+	return static_cast<unsigned long>(m_Stream.tellg());
 }
 
 void File::SetPosition(unsigned long position, FileConstants::PositionOrigin origin)
@@ -73,6 +73,6 @@ void File::SetPosition(unsigned long position, FileConstants::PositionOrigin ori
 			seekDir = std::ios::beg; break;
 	}
 
-	mStream.seekg(position, seekDir);
+	m_Stream.seekg(position, seekDir);
 }
 }

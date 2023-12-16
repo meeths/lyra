@@ -9,15 +9,15 @@ namespace Math
     {
 
     public:
-        Vector2f GetOrigin() const { return mMin; }
-        Vector2f GetDimensions() const { return mMax - mMin; }
+        Vector2f GetOrigin() const { return m_Min; }
+        Vector2f GetDimensions() const { return m_Max - m_Min; }
 
-        Math::Vector2f mMin = {};
-        Math::Vector2f mMax = {};
+        Vector2f m_Min = {};
+        Vector2f m_Max = {};
 
         friend bool operator ==(const Rectangle& a, const Rectangle& b)
         {
-            return a.mMax == b.mMax && a.mMin == b.mMin;
+            return a.m_Max == b.m_Max && a.m_Min == b.m_Min;
         }
 
         friend bool operator !=(const Rectangle& a, const Rectangle& b)
@@ -28,10 +28,10 @@ namespace Math
         bool IsPointInsideRect(const Vector2f& _point) const
         {
             return
-                mMin.x <= _point.x &&
-                mMin.y <= _point.y &&
-                mMax.x >= _point.x &&
-                mMax.y >= _point.y;
+                m_Min.x <= _point.x &&
+                m_Min.y <= _point.y &&
+                m_Max.x >= _point.x &&
+                m_Max.y >= _point.y;
     }
 
     };
@@ -40,15 +40,15 @@ namespace Math
     {
 
     public:
-        Vector2i GetOrigin() const { return mMin; }
-        Vector2i GetDimensions() const { return mMax - mMin; }
+        Vector2i GetOrigin() const { return m_Min; }
+        Vector2i GetDimensions() const { return mMax - m_Min; }
 
-        Math::Vector2i mMin = {};
-        Math::Vector2i mMax = {};
+        Vector2i m_Min = {};
+        Vector2i m_max = {};
 
         friend bool operator ==(const Rectanglei& a, const Rectanglei& b)
         {
-            return a.mMax == b.mMax && a.mMin == b.mMin;
+            return a.mMax == b.mMax && a.m_Min == b.m_Min;
         }
 
         friend bool operator !=(const Rectanglei& a, const Rectanglei& b)

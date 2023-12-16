@@ -1,6 +1,7 @@
 #pragma once
-#include <Core/Types.h>
+#include <Containers/Vector.h>
 #include <Filesystem/FileConstants.h>
+#include <Memory/SharedPointer.h>
 #include <String/String.h>
 
 namespace lyra

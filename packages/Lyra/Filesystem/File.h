@@ -10,7 +10,7 @@ namespace lyra
 class File : public IFile
 {
 public:
-	explicit File(StringView filename) : mFileName(filename) {}
+	explicit File(StringView filename) : m_FileName(filename) {}
 	DeclareNonCopyable(File);
 	DeclareDefaultMoveable(File);
 
@@ -24,10 +24,10 @@ public:
 	unsigned long GetPosition() override;
 	void SetPosition(unsigned long position, FileConstants::PositionOrigin origin) override;
 
-	std::fstream& GetStream() { return mStream; }
+	std::fstream& GetStream() { return m_Stream; }
 private:
-	std::fstream mStream;
-	String mFileName;
+	std::fstream m_Stream;
+	String m_FileName;
 
 };
 

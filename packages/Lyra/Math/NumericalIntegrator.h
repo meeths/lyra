@@ -14,23 +14,23 @@ class NumericalIntegrator
 public:
 
 	template<typename ...Ts>
-	NumericalIntegrator(Ts... args) : mValues{args...}
+	NumericalIntegrator(Ts... args) : m_Values{args...}
 	{
 		static_assert(sizeof...(args) <= N, "Numerical integrator initialized to incorrect number of values");
 	};
 
 	void Evaluate(float _delta)
 	{
-		for (auto it = mValues.rbegin(); it != (mValues.rend() - 1); ++it)
+		for (auto it = m_Values.rbegin(); it != (m_Values.rend() - 1); ++it)
 		{
 			T& integral = *(it + 1);
 			integral = integral + (*(it) * _delta);
 		}
 	};
 
-	T GetDerivative(int _index) const { return mValues[_index]; }
+	T GetDerivative(int _index) const { return m_Values[_index]; }
 private:
-	Array<T, N> mValues;
+	Array<T, N> m_Values;
 };
 }
 

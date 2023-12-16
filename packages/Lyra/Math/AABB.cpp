@@ -1,5 +1,6 @@
 #include <Math/AABB.h>
-#include <Core/Types.h>
+#include <Containers/Array.h>
+
 namespace lyra
 {
     Math::AABB Math::AABB::GetTransformed(const Math::Matrix44& _matrix) const
@@ -7,14 +8,14 @@ namespace lyra
         AABB ret;
         Array<Vector3f, 8> boxVertices;
 
-        boxVertices[0].x = mMin.x; boxVertices[0].y = mMin.y; boxVertices[0].z = mMin.z;
-        boxVertices[1].x = mMin.x; boxVertices[1].y = mMin.y; boxVertices[1].z = mMax.z;
-        boxVertices[2].x = mMin.x; boxVertices[2].y = mMax.y; boxVertices[2].z = mMin.z;
-        boxVertices[3].x = mMin.x; boxVertices[3].y = mMax.y; boxVertices[3].z = mMax.z;
-        boxVertices[4].x = mMax.x; boxVertices[4].y = mMin.y; boxVertices[4].z = mMin.z;
-        boxVertices[5].x = mMax.x; boxVertices[5].y = mMin.y; boxVertices[5].z = mMax.z;
-        boxVertices[6].x = mMax.x; boxVertices[6].y = mMax.y; boxVertices[6].z = mMin.z;
-        boxVertices[7].x = mMax.x; boxVertices[7].y = mMax.y; boxVertices[7].z = mMax.z;
+        boxVertices[0].x = m_Min.x; boxVertices[0].y = m_Min.y; boxVertices[0].z = m_Min.z;
+        boxVertices[1].x = m_Min.x; boxVertices[1].y = m_Min.y; boxVertices[1].z = m_Max.z;
+        boxVertices[2].x = m_Min.x; boxVertices[2].y = m_Max.y; boxVertices[2].z = m_Min.z;
+        boxVertices[3].x = m_Min.x; boxVertices[3].y = m_Max.y; boxVertices[3].z = m_Max.z;
+        boxVertices[4].x = m_Max.x; boxVertices[4].y = m_Min.y; boxVertices[4].z = m_Min.z;
+        boxVertices[5].x = m_Max.x; boxVertices[5].y = m_Min.y; boxVertices[5].z = m_Max.z;
+        boxVertices[6].x = m_Max.x; boxVertices[6].y = m_Max.y; boxVertices[6].z = m_Min.z;
+        boxVertices[7].x = m_Max.x; boxVertices[7].y = m_Max.y; boxVertices[7].z = m_Max.z;
 
         for (const auto& vertex : boxVertices)
         {

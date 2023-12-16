@@ -63,36 +63,36 @@ inline bool Vector2i::operator!=(const Vector2i& other) const
 //----------------------------------------------------------------------------------------------------------------------
 inline Vector2i Vector2i::operator+(const Vector2i& other) const
 {
-	return Vector2i(x + other.x, y + other.y);
+	return {x + other.x, y + other.y};
 }
 //----------------------------------------------------------------------------------------------------------------------
 inline Vector2i Vector2i::operator-(const Vector2i& other) const
 {
-	return Vector2i(x - other.x, y - other.y);
+	return {x - other.x, y - other.y};
 }
 //----------------------------------------------------------------------------------------------------------------------
-	inline Vector2i Vector2i::operator*(const int& value) const
+inline Vector2i Vector2i::operator*(const int& value) const
 {
-	return Vector2i(x * value, y * value);
+	return {x * value, y * value};
 }
 //----------------------------------------------------------------------------------------------------------------------
 inline Vector2i Vector2i::operator*(const float& value) const
 {
-return Vector2i(static_cast<int>(static_cast<float>(x) * value), static_cast<int>(static_cast<float>(y) * value));
+return {static_cast<int>(static_cast<float>(x) * value), static_cast<int>(static_cast<float>(y) * value)};
 }
 //----------------------------------------------------------------------------------------------------------------------
 	inline Vector2i Vector2i::operator*(const Vector2i& value) const
 {
-	return Vector2i(x * value.x, y * value.y);
+	return {x * value.x, y * value.y};
 }
 //----------------------------------------------------------------------------------------------------------------------
 inline Vector2i Vector2i::operator/(const int& value) const
 {
-	return Vector2i(x / value, y / value);
+	return {x / value, y / value};
 }
 //----------------------------------------------------------------------------------------------------------------------
 inline Vector2i Vector2i::operator-() const
 {
-	return Vector2i(-x, -y);
+	return {-x, -y};
 }
 }}

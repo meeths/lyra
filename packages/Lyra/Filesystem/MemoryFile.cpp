@@ -7,48 +7,48 @@ namespace lyra
 {
 	void MemoryFile::Open(FileConstants::OpenMode openMode)
 	{
-		mIsOpen = true;
-		mOpenMode = openMode;
+		m_IsOpen = true;
+		m_OpenMode = openMode;
 	}
 
 	bool MemoryFile::IsOpen()
 	{
-		return mIsOpen;
+		return m_IsOpen;
 	}
 
 	void MemoryFile::Close()
 	{
-		mIsOpen = false;
+		m_IsOpen = false;
 	}
 
 	unsigned long MemoryFile::Read(void * buffer, unsigned long size, unsigned long elementSize)
 	{
-		if(!(mOpenMode & (int)FileConstants::OpenMode::Read))
+		if(!(m_OpenMode & (int)FileConstants::OpenMode::Read))
 			return 0;
 
-		auto readSize = Math::Min(size * elementSize, (unsigned long)mBuffer.size() - mCursor);
+		auto readSize = Math::Min(size * elementSize, (unsigned long)m_Buffer.size() - m_Cursor);
 
 		if(readSize <= 0)
 			return 0;
 
-		std::memcpy(buffer, mBuffer.data(), readSize);
-		mCursor += readSize;
+		std::memcpy(buffer, m_Buffer.data(), readSize);
+		m_Cursor += readSize;
 		return readSize;
 	}
 
 	unsigned long MemoryFile::Write(const void * buffer, unsigned long size, unsigned long elementSize)
 	{
-		if((static_cast<int>(mOpenMode) & static_cast<int>(FileConstants::OpenMode::Write)) == 0 )
+		if((static_cast<int>(m_OpenMode) & static_cast<int>(FileConstants::OpenMode::Write)) == 0 )
 			return 0;
 
-		if(mOpenMode & FileConstants::OpenMode::Append)
-			mCursor = (unsigned long) mBuffer.size();
+		if(m_OpenMode & FileConstants::OpenMode::Append)
+			m_Cursor = (unsigned long) m_Buffer.size();
 
 		auto writeSize = size * elementSize;
-		if(writeSize + mCursor > mBuffer.size())
-			mBuffer.resize(writeSize + mCursor);
-		std::memcpy(mBuffer.data(), buffer, writeSize);
-		mCursor = mCursor + writeSize;
+		if(writeSize + m_Cursor > m_Buffer.size())
+			m_Buffer.resize(writeSize + m_Cursor);
+		std::memcpy(m_Buffer.data(), buffer, writeSize);
+		m_Cursor = m_Cursor + writeSize;
 		return writeSize;
 	}
 
@@ -57,13 +57,13 @@ namespace lyra
 		switch(origin)
 		{
 		case FileConstants::PositionOrigin::Start:
-			mCursor = position;
+			m_Cursor = position;
 			break;
 		case FileConstants::PositionOrigin::End:
-			mCursor = (unsigned long) mBuffer.size() - position;
+			m_Cursor = (unsigned long) m_Buffer.size() - position;
 			break;
 		case FileConstants::PositionOrigin::Current:
-			mCursor = mCursor + position;
+			m_Cursor = m_Cursor + position;
 			break;
 		}
 	}

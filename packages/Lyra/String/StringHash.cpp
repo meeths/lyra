@@ -5,12 +5,12 @@ namespace lyra
 {
     ConstStringHash::operator StringHash() const
     {
-        { return StringHash(mHash); };
+        { return StringHash(m_Hash); };
     }
 
     StringHash::StringHash(const char* _string)
     {
-        mId = murmur::StaticHashValueInternal32(_string, strlen(_string), defaultHashSeed);//MurmurHash64A(_string, int(strlen(_string)), defaultHashSeed);
+        m_Id = murmur::StaticHashValueInternal32(_string, strlen(_string), defaultHashSeed);//MurmurHash64A(_string, int(strlen(_string)), defaultHashSeed);
 #ifdef _DEBUG
         _debugOriginalString = _string;
 #endif
@@ -18,7 +18,7 @@ namespace lyra
 
     StringHash::StringHash(const String &_string)
     {
-        mId = murmur::StaticHashValueInternal32(_string.c_str(), strlen(_string.c_str()), defaultHashSeed);//MurmurHash64A(_string.c_str(), int(_string.size()), defaultHashSeed);
+        m_Id = murmur::StaticHashValueInternal32(_string.c_str(), strlen(_string.c_str()), defaultHashSeed);//MurmurHash64A(_string.c_str(), int(_string.size()), defaultHashSeed);
 #ifdef _DEBUG
         _debugOriginalString = _string;
 #endif

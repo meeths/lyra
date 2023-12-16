@@ -4,8 +4,8 @@
 // Created on 2019-03-18 by sisco
 #include <String/String.h>
 #include <cstdarg>
-#include <Core/Types.h>
 #include <Core/CoreDefines.h>
+#include <Containers/Vector.h>
 
 namespace lyra
 {

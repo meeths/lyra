@@ -34,12 +34,12 @@ namespace lyra { namespace Math
 
 	inline int NextPowerOf2(int val) { return (int)pow(2, (int)ceil(log(val) / log(2))); }
 
-	static const float Pi{ 3.14159265358979f };
-	static const float HalfPi{ 3.14159265358979f / 2.0f };
-	static const float EpsilonBig{ 0.0001f };
-	static const float EpsilonMedium{ 0.000001f };
-	static const float EpsilonSmall{ 0.000000001f };
+	static constexpr float Pi{ 3.14159265358979f };
+	static constexpr float HalfPi{ 3.14159265358979f / 2.0f };
+	static constexpr float EpsilonBig{ 0.0001f };
+	static constexpr float EpsilonMedium{ 0.000001f };
+	static constexpr float EpsilonSmall{ 0.000000001f };
 
-	static const float Rad2Deg = (180.f / Pi);
-	static const float Deg2Rad = (Pi / 180.f);
+	static constexpr float Rad2Deg = (180.f / Pi);
+	static constexpr float Deg2Rad = (Pi / 180.f);
 }}
