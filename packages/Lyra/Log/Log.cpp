@@ -1,0 +1,53 @@
+
+#include <Log/Log.h>
+
+// Created on 2020-04-30 by sisco
+#include <cstdarg>
+#include <Time/Chronometer.h>
+#include <String/StringUtils.h>
+#include <Containers/Array.h>
+
+namespace lyra
+{
+	void Log::RegisterLogger(SharedPointer<ILogger> _logger)
+	{
+		mLoggers.emplace_back(std::move(_logger));
+	}
+
+	void Log::LogWarning(const char* fmt, ...)
+	{
+		va_list args;
+		va_start(args, fmt);
+		LogDetail(LogType::LOG_WARNING, fmt, args);
+		va_end(args);
+	}
+
+	void Log::LogError(const char* fmt, ...)
+	{
+		va_list args;
+		va_start(args, fmt);
+		LogDetail(LogType::LOG_ERROR, fmt, args);
+		va_end(args);
+	}
+
+	void Log::LogInfo(const char* fmt, ...)
+	{
+		va_list args;
+		va_start(args, fmt);
+		LogDetail(LogType::LOG_INFO, fmt, args);
+		va_end(args);
+	}
+
+	void Log::LogDetail(LogType logType, const char* fmt, va_list args)
+	{
+		Array<char, 2048> buffer;
+
+		vsnprintf(buffer.data(), buffer.size(), fmt, args);
+
+		for (auto& logger : mLoggers)
+		{
+			logger->Log(logType, String(buffer.data()));
+		}
+	}
+	
+}
