@@ -1,5 +1,6 @@
 #pragma once
 #include <cassert>
+#include <Memory/ProfiledAllocator.h>
 
 #define DeclareNonCopyable(classname) classname ( const classname& ) = delete; classname &operator=(classname &a) = delete
 #define DeclareNonMoveable(classname)     classname(classname &&) = delete; classname &operator=(classname &&a) = delete
