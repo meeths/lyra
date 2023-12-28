@@ -16,6 +16,7 @@ project "lyra.app"
     
     includedirs {
         "%{BASE_DIR}packages/Lyra",
+        "%{BASE_DIR}packages/LyraRender",
         "%{BASE_DIR}packages/LyraApp"
     }
     
@@ -55,6 +56,7 @@ project "lyra.app.editor"
 
     includedirs {
         "%{BASE_DIR}packages/Lyra",
+        "%{BASE_DIR}packages/LyraRender",
         "%{BASE_DIR}packages/LyraEditor",
         "%{BASE_DIR}packages/LyraAppEditor"
     }
