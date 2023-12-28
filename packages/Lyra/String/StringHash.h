@@ -23,21 +23,29 @@ namespace lyra
         friend class StringHash;
         constexpr ConstStringHash(const char* _string)
         :m_Hash(murmur::StaticHashValueInternal32(_string, StringView(_string).length(), defaultHashSeed))
+#ifdef KEEP_ORIGINAL_STRING
+        , _debugOriginalString(StringView(_string))
+#endif
         {}
         
         constexpr ConstStringHash(const StringView _string)
         :m_Hash(murmur::StaticHashValueInternal32(_string.data(), _string.length(), defaultHashSeed))
+#ifdef KEEP_ORIGINAL_STRING
+        , _debugOriginalString(_string)
+#endif
         {}
         
         constexpr ConstStringHash(const StringHashType _id) : m_Hash(_id) {}
         constexpr ConstStringHash(const ConstStringHash& _other) = default;
 
-        operator StringHash() const;
-
         friend bool operator ==(const ConstStringHash& a, const StringHash& b);
     protected:
 
         const StringHashType m_Hash;
+#ifdef KEEP_ORIGINAL_STRING
+        StringView _debugOriginalString = "_from_constexpr_unknown_";
+#endif
+        
     };
     
     class StringHash
@@ -46,7 +54,11 @@ namespace lyra
         friend class ConstStringHash;
         
         StringHash(const char* _string);
-        constexpr StringHash(const ConstStringHash& _constStringHash) { m_Id = _constStringHash.m_Hash; };
+        constexpr StringHash(const ConstStringHash& _constStringHash) : m_Id(_constStringHash.m_Hash)
+#ifdef KEEP_ORIGINAL_STRING
+        , _debugOriginalString(_constStringHash._debugOriginalString)
+#endif
+        {};
         constexpr StringHash(const StringView _view) : StringHash(ConstStringHash(_view))
         {
 #ifdef KEEP_ORIGINAL_STRING
@@ -76,7 +88,7 @@ namespace lyra
 
         StringHashType m_Id = 0;
 #ifdef KEEP_ORIGINAL_STRING
-        StringView _debugOriginalString = "-empty-";
+        StringView _debugOriginalString = "-_unknown_-";
 #endif
     };
 }
