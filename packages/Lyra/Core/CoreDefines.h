@@ -11,7 +11,7 @@
 
 #define lyraAssert(x) assert(x)
 
-#define DefineGlobalConstexprVariableAccessor(classname, name, value)     inline constexpr classname name()\
+#define DefineGlobalConstexprVariableAccessor(classname, name, value)     inline static constexpr classname name()\
     { return value;}
 
 #define DefineGlobalStaticVariableAccessor(classname, name, value)     inline classname name()\
