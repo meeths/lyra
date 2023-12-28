@@ -60,6 +60,7 @@ void WindowsApplication::Run()
 
 	while (!m_applicationWindow->CloseRequested())
 	{
+		ProfileScopedN("WindowsApplicationFrame");
 		const auto deltaTime = chrono.Lap<float, TimeTypes::Seconds>();
 		m_engineLoop.Step(deltaTime);
 		ProfileFrameMark;
