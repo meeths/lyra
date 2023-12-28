@@ -132,7 +132,7 @@ VkFormat VulkanDevice::FindSupportedImageFormat(const Vector<VkFormat>& _candida
 {
     for (VkFormat format : _candidates) {
         VkFormatProperties props;
-        vkGetPhysicalDeviceFormatProperties(mPhysicalDevice, format, &props);
+        vkGetPhysicalDeviceFormatProperties(m_PhysicalDevice, format, &props);
 
         if (_tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & _features) == _features) {
             return format;
@@ -149,20 +149,22 @@ void VulkanDevice::BeginFrame(VulkanSwapchain& _swapchain)
 {
     {
         ProfileScopedN("Wait for fences");
-        vkWaitForFences(mDevice, 1, &mInflightFences[mCurrentSynchronizationObject], VK_TRUE, std::numeric_limits<uint64_t>::max());
-        vkResetFences(mDevice, 1, &mInflightFences[mCurrentSynchronizationObject]);
+        vkWaitForFences(m_Device, 1, &m_InflightFences[m_CurrentSynchronizationObject], VK_TRUE, std::numeric_limits<uint64_t>::max());
+        vkResetFences(m_Device, 1, &m_InflightFences[m_CurrentSynchronizationObject]);
     }
 
     {
         ProfileScopedN("Acquire next image");
 
-        vkAcquireNextImageKHR(
-           mDevice,
+        VkResult result = vkAcquireNextImageKHR(
+           m_Device,
            _swapchain.GetVkSwapchain(),
            std::numeric_limits<uint64_t>::max(),
-           mImageAvailableSemaphores[mCurrentSynchronizationObject],
+           m_ImageAvailableSemaphores[m_CurrentSynchronizationObject],
            VK_NULL_HANDLE,
-           &mCurrentAcquiredImageIndex);
+           &m_CurrentAcquiredImageIndex);
+
+        lyraAssert(result == VK_SUCCESS);
     }
 }
 
@@ -174,7 +176,7 @@ void VulkanDevice::OnEndFrame(VulkanSwapchain& _swapchain)
 VulkanBuffer VulkanDevice::CreateVulkanBuffer(unsigned long long _size, int _usageBits, VkMemoryPropertyFlags _memoryFlags)
 {
     auto buffer = VulkanBuffer();
-    buffer.Create(mDevice, mPhysicalDevice, _size, _usageBits, VK_SHARING_MODE_EXCLUSIVE, _memoryFlags);
+    buffer.Create(m_Device, m_PhysicalDevice, _size, _usageBits, VK_SHARING_MODE_EXCLUSIVE, _memoryFlags);
     return buffer;
 
 }
@@ -183,7 +185,7 @@ VulkanBuffer VulkanDevice::CreateVulkanBuffer(void* _data, unsigned long long _s
     VkMemoryPropertyFlags _memoryFlags)
 {
 
-    auto stagingBuffer = VulkanStagingBuffer(mDevice, mPhysicalDevice, mQueues->GetTransferQueue(), _size);
+    auto stagingBuffer = VulkanStagingBuffer(m_Device, m_PhysicalDevice, m_Queues->GetTransferQueue(), _size);
 
     auto buffer = CreateVulkanBuffer(_size, _usageBits | VK_BUFFER_USAGE_TRANSFER_DST_BIT, _memoryFlags);
 
@@ -198,20 +200,20 @@ VulkanBuffer VulkanDevice::CreateVulkanBuffer(void* _data, unsigned long long _s
 
 void VulkanDevice::DestroySynchronizationObjects()
 {
-    for (auto& inflightFence : mInflightFences)
+    for (auto& inflightFence : m_InflightFences)
         if(inflightFence)
-            vkDestroyFence(mDevice, inflightFence, nullptr);
-    mInflightFences.clear();
+            vkDestroyFence(m_Device, inflightFence, nullptr);
+    m_InflightFences.clear();
     
-    for (auto& renderSemaphore : mRenderFinishedSemaphores)
+    for (auto& renderSemaphore : m_RenderFinishedSemaphores)
         if(renderSemaphore)
-            vkDestroySemaphore(mDevice, renderSemaphore, nullptr);
-    mRenderFinishedSemaphores.clear();
+            vkDestroySemaphore(m_Device, renderSemaphore, nullptr);
+    m_RenderFinishedSemaphores.clear();
     
-    for (auto& imageSemaphore : mImageAvailableSemaphores)
+    for (auto& imageSemaphore : m_ImageAvailableSemaphores)
         if(imageSemaphore)
-            vkDestroySemaphore(mDevice, imageSemaphore, nullptr);
-    mImageAvailableSemaphores.clear();
+            vkDestroySemaphore(m_Device, imageSemaphore, nullptr);
+    m_ImageAvailableSemaphores.clear();
 }
 
 void VulkanDevice::PresentFrame(VulkanSwapchain& _swapchain)
@@ -219,23 +221,23 @@ void VulkanDevice::PresentFrame(VulkanSwapchain& _swapchain)
     VkPresentInfoKHR presentInfo = {};
     presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 
-    VkSemaphore signalSemaphores[] = { mRenderFinishedSemaphores[mCurrentSynchronizationObject] };
+    const VkSemaphore signalSemaphores[] = { m_RenderFinishedSemaphores[m_CurrentSynchronizationObject] };
     presentInfo.waitSemaphoreCount = 1;
     presentInfo.pWaitSemaphores = signalSemaphores;
 
-    VkSwapchainKHR swapChains[] = { _swapchain.GetVkSwapchain() };
+    const VkSwapchainKHR swapChains[] = { _swapchain.GetVkSwapchain() };
     presentInfo.swapchainCount = 1;
     presentInfo.pSwapchains = swapChains;
-    presentInfo.pImageIndices = &mCurrentAcquiredImageIndex;
+    presentInfo.pImageIndices = &m_CurrentAcquiredImageIndex;
     presentInfo.pResults = nullptr;
 
-    vkQueuePresentKHR(mQueues->GetPresentQueue().m_Queue, &presentInfo);
-    mCurrentSynchronizationObject = (mCurrentSynchronizationObject + 1) % mNumSynchronizationObjects;
+    vkQueuePresentKHR(m_Queues->GetPresentQueue().m_Queue, &presentInfo);
+    m_CurrentSynchronizationObject = (m_CurrentSynchronizationObject + 1) % m_NumSynchronizationObjects;
 }
 
 void VulkanDevice::CreateLogicalDevice(VulkanInstance& _vulkanInstance)
 {
-    const auto queueFamilies = VulkanQueueFamily::FindQueueFamilies(mPhysicalDevice, _vulkanInstance.GetVkPresentationSurface());
+    const auto queueFamilies = VulkanQueueFamily::FindQueueFamilies(m_PhysicalDevice, _vulkanInstance.GetVkPresentationSurface());
 
     Vector<VkDeviceQueueCreateInfo> queueCreateInfos = {};
     Set<int> uniqueQueueFamilies = { queueFamilies.m_GraphicsFamily, queueFamilies.m_PresentFamily };
@@ -266,7 +268,7 @@ void VulkanDevice::CreateLogicalDevice(VulkanInstance& _vulkanInstance)
     createInfo.pEnabledFeatures = &deviceFeatures;
 
     bool debugMarkerExtensionRequested = false;
-    if(CheckExtensionsSupport(mPhysicalDevice, {VK_EXT_DEBUG_MARKER_EXTENSION_NAME}))
+    if(CheckExtensionsSupport(m_PhysicalDevice, {VK_EXT_DEBUG_MARKER_EXTENSION_NAME}))
     {
         kRequiredExtensionNames.push_back(VK_EXT_DEBUG_MARKER_EXTENSION_NAME);
         debugMarkerExtensionRequested = true;
@@ -283,18 +285,18 @@ void VulkanDevice::CreateLogicalDevice(VulkanInstance& _vulkanInstance)
         validationLayers->Prepare(createInfo);
     }
 
-    if (vkCreateDevice(mPhysicalDevice, &createInfo, nullptr, &mDevice) != VK_SUCCESS) 
+    if (vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device) != VK_SUCCESS) 
     {
         lyraAssert(0 && "failed to create logical device!");
     }
 
     if(debugMarkerExtensionRequested)
     {
-        vkDebugMarkerSetObjectTag = reinterpret_cast<PFN_vkDebugMarkerSetObjectTagEXT>(vkGetDeviceProcAddr(mDevice, "vkDebugMarkerSetObjectTagEXT"));
-        vkDebugMarkerSetObjectName = reinterpret_cast<PFN_vkDebugMarkerSetObjectNameEXT>(vkGetDeviceProcAddr(mDevice, "vkDebugMarkerSetObjectNameEXT"));
-        vkCmdDebugMarkerBegin = reinterpret_cast<PFN_vkCmdDebugMarkerBeginEXT>(vkGetDeviceProcAddr(mDevice, "vkCmdDebugMarkerBeginEXT"));
-        vkCmdDebugMarkerEnd = reinterpret_cast<PFN_vkCmdDebugMarkerEndEXT>(vkGetDeviceProcAddr(mDevice, "vkCmdDebugMarkerEndEXT"));
-        vkCmdDebugMarkerInsert = reinterpret_cast<PFN_vkCmdDebugMarkerInsertEXT>(vkGetDeviceProcAddr(mDevice, "vkCmdDebugMarkerInsertEXT"));
+        vkDebugMarkerSetObjectTag = reinterpret_cast<PFN_vkDebugMarkerSetObjectTagEXT>(vkGetDeviceProcAddr(m_Device, "vkDebugMarkerSetObjectTagEXT"));
+        vkDebugMarkerSetObjectName = reinterpret_cast<PFN_vkDebugMarkerSetObjectNameEXT>(vkGetDeviceProcAddr(m_Device, "vkDebugMarkerSetObjectNameEXT"));
+        vkCmdDebugMarkerBegin = reinterpret_cast<PFN_vkCmdDebugMarkerBeginEXT>(vkGetDeviceProcAddr(m_Device, "vkCmdDebugMarkerBeginEXT"));
+        vkCmdDebugMarkerEnd = reinterpret_cast<PFN_vkCmdDebugMarkerEndEXT>(vkGetDeviceProcAddr(m_Device, "vkCmdDebugMarkerEndEXT"));
+        vkCmdDebugMarkerInsert = reinterpret_cast<PFN_vkCmdDebugMarkerInsertEXT>(vkGetDeviceProcAddr(m_Device, "vkCmdDebugMarkerInsertEXT"));
 
         lyraAssert(DebugMarkersAvailable());
     }
@@ -303,27 +305,27 @@ void VulkanDevice::CreateLogicalDevice(VulkanInstance& _vulkanInstance)
 
 VulkanDevice::VulkanDevice(InitInfo _initInfo)
 {
-    const auto devices = EnumeratePhysicalDevices(_initInfo.mVulkanInstance);
+    const auto devices = EnumeratePhysicalDevices(_initInfo.m_VulkanInstance);
     if(devices.empty())
     {
         lyraAssert(0 && "No devices with Vulkan support found.");
     }
 
-    mPhysicalDevice = GetMostSuitedPhysicalDevice(_initInfo.mVulkanInstance);
+    m_PhysicalDevice = GetMostSuitedPhysicalDevice(_initInfo.m_VulkanInstance);
     
 #ifdef DEBUG
-    LogDeviceSpecs(mPhysicalDevice);
-    std::cout << "Device score: " << RateDeviceSuitability(mPhysicalDevice, _initInfo.mVulkanInstance) << std::endl;
+    LogDeviceSpecs(m_PhysicalDevice);
+    std::cout << "Device score: " << RateDeviceSuitability(m_PhysicalDevice, _initInfo.m_VulkanInstance) << std::endl;
 #endif
     
-    CreateLogicalDevice(_initInfo.mVulkanInstance);
+    CreateLogicalDevice(_initInfo.m_VulkanInstance);
 
     VulkanQueues::InitInfo queuesInitInfo
     {
-        mDevice,
-        VulkanQueueFamily::FindQueueFamilies(mPhysicalDevice, _initInfo.mVulkanInstance.GetVkPresentationSurface())
+        m_Device,
+        VulkanQueueFamily::FindQueueFamilies(m_PhysicalDevice, _initInfo.m_VulkanInstance.GetVkPresentationSurface())
     };
-    mQueues = MakeUniquePointer<VulkanQueues>(queuesInitInfo);
+    m_Queues = MakeUniquePointer<VulkanQueues>(queuesInitInfo);
 
 }
 
@@ -332,10 +334,10 @@ VulkanDevice::~VulkanDevice()
     WaitForDevice();
 
     DestroySynchronizationObjects();
-    if(mDevice)
+    if(m_Device)
     {
-        vkDestroyDevice(mDevice, nullptr);
-        mDevice = nullptr;
+        vkDestroyDevice(m_Device, nullptr);
+        m_Device = nullptr;
     }
 }
 
@@ -343,13 +345,13 @@ void VulkanDevice::InitializeSynchronizationObjects(size_t _numSynchronizationOb
 {
     DestroySynchronizationObjects();
     
-    mNumSynchronizationObjects = _numSynchronizationObjects;
+    m_NumSynchronizationObjects = _numSynchronizationObjects;
     
-    mCurrentSynchronizationObject = 0;
+    m_CurrentSynchronizationObject = 0;
 
-    mImageAvailableSemaphores.resize(mNumSynchronizationObjects);
-    mRenderFinishedSemaphores.resize(mNumSynchronizationObjects);
-    mInflightFences.resize(mNumSynchronizationObjects);
+    m_ImageAvailableSemaphores.resize(m_NumSynchronizationObjects);
+    m_RenderFinishedSemaphores.resize(m_NumSynchronizationObjects);
+    m_InflightFences.resize(m_NumSynchronizationObjects);
 
     VkSemaphoreCreateInfo semaphoreInfo = {};
     semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -358,18 +360,18 @@ void VulkanDevice::InitializeSynchronizationObjects(size_t _numSynchronizationOb
     fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
     fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-    for(int i = 0; i < mNumSynchronizationObjects; ++i)
+    for(int i = 0; i < m_NumSynchronizationObjects; ++i)
     {
-        if (vkCreateSemaphore(mDevice, &semaphoreInfo, nullptr, &mImageAvailableSemaphores[i]) != VK_SUCCESS ||
-            vkCreateSemaphore(mDevice, &semaphoreInfo, nullptr, &mRenderFinishedSemaphores[i]) != VK_SUCCESS ||
-            vkCreateFence(mDevice, &fenceInfo, nullptr, &mInflightFences[i]) != VK_SUCCESS)
+        if (vkCreateSemaphore(m_Device, &semaphoreInfo, nullptr, &m_ImageAvailableSemaphores[i]) != VK_SUCCESS ||
+            vkCreateSemaphore(m_Device, &semaphoreInfo, nullptr, &m_RenderFinishedSemaphores[i]) != VK_SUCCESS ||
+            vkCreateFence(m_Device, &fenceInfo, nullptr, &m_InflightFences[i]) != VK_SUCCESS)
                 lyraAssert(0 && "failed to create semaphores!");
     }
 }
 
 void VulkanDevice::WaitForDevice() const
 {
-    vkDeviceWaitIdle(mDevice);
+    vkDeviceWaitIdle(m_Device);
 }
 
 }

@@ -22,7 +22,7 @@ class VulkanDevice
 public:
     typedef struct
     {
-        VulkanInstance& mVulkanInstance;
+        VulkanInstance& m_VulkanInstance;
     }InitInfo;	
 	
     VulkanDevice(InitInfo _initInfo);
@@ -32,8 +32,8 @@ public:
 	
     void WaitForDevice() const;
 
-    VkPhysicalDevice GetVkPhysicalDevice() const { return mPhysicalDevice; }
-    VkDevice GetVkDevice() const { return mDevice; }
+    VkPhysicalDevice GetVkPhysicalDevice() const { return m_PhysicalDevice; }
+    VkDevice GetVkDevice() const { return m_Device; }
 	
     static Vector<VkPhysicalDevice> EnumeratePhysicalDevices(VulkanInstance& _instance);
     static VkPhysicalDevice GetMostSuitedPhysicalDevice(VulkanInstance& _instance);
@@ -44,35 +44,35 @@ public:
     void OnEndFrame(VulkanSwapchain& _swapchain);
     void PresentFrame(VulkanSwapchain& swapchain);
 
-    VulkanQueues& GetQueues() { return *mQueues; }
+    VulkanQueues& GetQueues() { return *m_Queues; }
 
-    size_t GetCurrentBufferIndex() const { return mCurrentSynchronizationObject; };
+    size_t GetCurrentBufferIndex() const { return m_CurrentSynchronizationObject; };
 
     VulkanBuffer CreateVulkanBuffer(unsigned long long _size, int _usageBits, VkMemoryPropertyFlags _memoryFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
     VulkanBuffer CreateVulkanBuffer(void* _data, unsigned long long _size, int _usageBits, VkMemoryPropertyFlags _memoryFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
     static bool DebugMarkersAvailable() { return vkCmdDebugMarkerBegin != VK_NULL_HANDLE; }
 
-    VkSemaphore GetNextFrameImageAcquiredSemaphore() const { return mImageAvailableSemaphores[mCurrentSynchronizationObject]; }
-    VkSemaphore GetNextFrameRenderedSemaphore() const { return mRenderFinishedSemaphores[mCurrentSynchronizationObject]; }
-    VkFence GetNextFrameReadyFence() const { return mInflightFences[mCurrentSynchronizationObject]; } 
+    VkSemaphore GetRenderBeginAvailableSemaphore() const { return m_ImageAvailableSemaphores[m_CurrentSynchronizationObject]; }
+    VkSemaphore GetRenderFinishedSemaphore() const { return m_RenderFinishedSemaphores[m_CurrentSynchronizationObject]; }
+    VkFence GetNextFrameReadyFence() const { return m_InflightFences[m_CurrentSynchronizationObject]; } 
 private:
 	void DestroySynchronizationObjects();
 	void CreateLogicalDevice(VulkanInstance& _vulkanInstance);
 	static int RateDeviceSuitability(VkPhysicalDevice& device, VulkanInstance& _vulkanInstance);
 
-	VkPhysicalDevice mPhysicalDevice = nullptr;
-	VkDevice mDevice = nullptr;
+	VkPhysicalDevice m_PhysicalDevice = nullptr;
+	VkDevice m_Device = nullptr;
 
-	unsigned int mCurrentAcquiredImageIndex = 0;
-	size_t mNumSynchronizationObjects = 0;
-	size_t mCurrentSynchronizationObject = 0;
+	unsigned int m_CurrentAcquiredImageIndex = 0;
+	size_t m_NumSynchronizationObjects = 0;
+	size_t m_CurrentSynchronizationObject = 0;
 	
-	Vector<VkSemaphore> mImageAvailableSemaphores;
-	Vector<VkSemaphore> mRenderFinishedSemaphores;
-	Vector<VkFence> mInflightFences;
+	Vector<VkSemaphore> m_ImageAvailableSemaphores;
+	Vector<VkSemaphore> m_RenderFinishedSemaphores;
+	Vector<VkFence> m_InflightFences;
 
-	UniquePointer<VulkanQueues> mQueues;
+	UniquePointer<VulkanQueues> m_Queues;
 
 };
 
