@@ -2,6 +2,7 @@
 #pragma once
 #include <vulkan/vulkan_core.h>
 #include <Containers/Vector.h>
+#include <String/String.h>
 
 // Created on 2023-12-27 by sisco
 
@@ -19,6 +20,7 @@ class RenderList;
 class VulkanRenderPass
 {
 public:
+    VulkanRenderPass(StringView passName, VulkanSystem& _vulkanSystem);
     virtual ~VulkanRenderPass() = default;
     virtual VkRenderPass GetVkRenderPass() const { return m_vkRenderPass; }
     virtual void RecreatePipelines() = 0;
@@ -38,8 +40,7 @@ protected:
     Vector<VkFramebuffer> m_framebuffers;
 
     unsigned int m_currentBuffer = 0;
-    
-    
+    VulkanSystem& m_vulkanSystem;
 };
 
 }

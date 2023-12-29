@@ -28,8 +28,7 @@ namespace lyra
     {
         auto& commandBufferManager = m_vulkanSystem.GetVulkanCommandBufferManager();
 
-        auto& renderPassManager = m_vulkanSystem.GetVulkanRenderPassManager();
-        renderPassManager.AddRenderPass<VulkanDebugRenderPass>(g_debugPassName, m_vulkanSystem);
+        m_debugRenderPass = MakeUniquePointer<VulkanDebugRenderPass>(m_vulkanSystem);
         
         commandBufferManager.CreateMultiBufferedCommandBuffer(VulkanCommandBufferManager::GraphicsCommandPoolName(),
             g_debugPassCommandBufferName);
@@ -42,12 +41,9 @@ namespace lyra
         auto& currentCommandBuffer = commandBufferManager.GetCommandBuffer(g_debugPassCommandBufferName);
         auto& graphicsQueue = m_vulkanSystem.GetVulkanDevice().GetQueues().GetGraphicsQueue();
 
-        auto& renderPassManager = m_vulkanSystem.GetVulkanRenderPassManager();
-        auto& renderPass = renderPassManager.GetRenderPass(g_debugPassName);
-
         currentCommandBuffer.BeginRecording();
         
-        renderPass.BuildCommandBuffer({}, currentCommandBuffer);
+        m_debugRenderPass->BuildCommandBuffer({}, currentCommandBuffer);
         
         currentCommandBuffer.EndRecording();
         currentCommandBuffer.Execute(graphicsQueue,

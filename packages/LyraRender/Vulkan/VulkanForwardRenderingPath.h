@@ -28,6 +28,7 @@ public:
     void Execute() override;
 protected:
     VulkanSystem& m_vulkanSystem;
+    UniquePointer<VulkanDebugRenderPass> m_debugRenderPass;
 };
 
 }

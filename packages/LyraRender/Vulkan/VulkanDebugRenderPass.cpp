@@ -10,12 +10,13 @@
 
 namespace
 {
+    lyra::StringView g_debugPassName = "DebugRenderPass";
     lyra::ConstStringHash g_depthAttachmentName = "DebugRenderPassDepthBuffer";
 }
 
 namespace lyra
 {
-    VulkanDebugRenderPass::VulkanDebugRenderPass(VulkanSystem& _vulkanSystem) : m_vulkanSystem(_vulkanSystem)
+    VulkanDebugRenderPass::VulkanDebugRenderPass(VulkanSystem& _vulkanSystem) : VulkanRenderPass(g_debugPassName, _vulkanSystem)
     {
         auto& textureManager = m_vulkanSystem.GetVulkanTextureManager();
         auto& vulkanDevice = m_vulkanSystem.GetVulkanDevice();

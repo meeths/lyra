@@ -22,8 +22,6 @@ private:
     void CreateRenderPass(VulkanSwapchain& _vulkanSwapchain) override;
     void CreateFramebuffers(VulkanSwapchain& _vulkanSwapchain) override;
 
-    VulkanSystem& m_vulkanSystem;
-    
     VkFormat m_depthFormat {};
     VulkanTexture* m_depthTexture = nullptr;
     VulkanTexture* m_colorTexture = nullptr;

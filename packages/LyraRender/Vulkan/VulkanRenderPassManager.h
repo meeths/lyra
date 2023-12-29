@@ -25,13 +25,12 @@ public:
 
     void RecreatePipelines();
 
-    template <class T, class INIT_INFO>
-    void AddRenderPass(StringHash _name, INIT_INFO& _initInfo){ lyraAssert(!m_renderPasses.contains(_name)); m_renderPasses[_name] = MakeUniquePointer<T>(_initInfo); }
+    void AddRenderPass(StringHash _name, VulkanRenderPass* renderPass){ lyraAssert(!m_renderPasses.contains(_name)); m_renderPasses[_name] = renderPass; }
     
     VulkanRenderPass& GetRenderPass(StringHash _renderPass);
 
 private:
-    UnorderedMap<StringHash, UniquePointer<VulkanRenderPass>> m_renderPasses;
+    UnorderedMap<StringHash, VulkanRenderPass*> m_renderPasses;
 
 
 };
