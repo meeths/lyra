@@ -3,17 +3,18 @@
 #include <Filesystem/FileConstants.h>
 #include <Memory/SharedPointer.h>
 #include <String/String.h>
-
+#include <Core/Expected.h>
+#include <Core/Types.h> 
 namespace lyra
 {
 class IFile;
 
 namespace FileSystem
 {
-    SharedPointer<IFile> OpenFile(StringView filename, FileConstants::OpenMode openMode);
-    unsigned int GetFileSize(StringView filename);
+    Expected<SharedPointer<IFile>, String> OpenFile(StringView filename, FileConstants::OpenMode openMode);
+    Expected<uint64, String> GetFileSize(StringView filename);
     bool FileExists(StringView filename);
-    Vector<char> ReadFile(StringView filename);
+    Expected<Vector<char>, String> ReadFile(StringView filename);
     void WriteFile(StringView filename, const Vector<char>& _data);
     void WriteFile(StringView filename, StringView _data);
 

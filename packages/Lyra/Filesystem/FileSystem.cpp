@@ -14,19 +14,25 @@
 
 namespace lyra
 {
-SharedPointer<IFile> FileSystem::OpenFile(StringView filename, FileConstants::OpenMode openMode)
+Expected<SharedPointer<IFile>, String> FileSystem::OpenFile(StringView filename, FileConstants::OpenMode openMode)
 {
     auto file = MakeSharedPointer<File>(filename);
     file->Open(openMode);
+    if(!file->IsOpen())
+    {
+        return Unexpected{"Could not open file " + String(filename)};
+    }
     return file;
 }
 
-unsigned int FileSystem::GetFileSize(StringView filename)
+Expected<uint64, String> FileSystem::GetFileSize(StringView filename)
 {
-#ifdef DEBUG
     if(!FileExists(filename))
+    {
         lyraAssert(0 && "Error retrieving size of non existent file.");
-#endif
+        return Unexpected{"Could not open file " + String(filename)};
+        
+    }
     struct stat buffer{};
     stat(filename.data(), &buffer);
     return buffer.st_size;
@@ -38,16 +44,24 @@ bool FileSystem::FileExists(StringView filename)
     return stat (filename.data(), &buffer) == 0;
 }
 
-Vector<char> FileSystem::ReadFile(StringView filename)
+Expected<Vector<char>, String> FileSystem::ReadFile(StringView filename)
 {
 
     DiscFileLocator locator;
     const auto locatedFile = locator.Locate(filename);
-#ifdef DEBUG
     if(!locatedFile)
+    {
         lyraAssert(0 && "File does not exist");
-#endif
-    const auto fileSize = GetFileSize(filename);
+        return Unexpected{"Could not open file " + String(filename)};
+    }
+
+    auto expectedFileSize = GetFileSize(filename);
+    if(!expectedFileSize)
+    {
+        return Unexpected(expectedFileSize.error());
+    }
+    const auto fileSize = *expectedFileSize;
+    
     Vector<char> buffer(fileSize);
     const auto& file = locatedFile.value();
     file->Open(static_cast<FileConstants::OpenMode>(FileConstants::OpenMode::Read | FileConstants::OpenMode::Binary));
@@ -57,12 +71,20 @@ Vector<char> FileSystem::ReadFile(StringView filename)
 void FileSystem::WriteFile(StringView filename, const Vector<char>& _data)
 {
     auto file = OpenFile(filename, static_cast<FileConstants::OpenMode>(FileConstants::OpenMode::Write | FileConstants::OpenMode::Binary));
-    file->Write((void*)_data.data(), (unsigned int)_data.size(), 1);
+    if(!file)
+    {
+        lyraAssert(0);
+    }
+    (*file)->Write((void*)_data.data(), static_cast<unsigned int>(_data.size()), 1);
 }
 void FileSystem::WriteFile(StringView filename, StringView _data)
 {
     auto file = OpenFile(filename, static_cast<FileConstants::OpenMode>(FileConstants::OpenMode::Write | FileConstants::OpenMode::Binary));
-    file->Write((void*)_data.data(), (unsigned int)_data.size(), 1);
+    if(!file)
+    {
+        lyraAssert(0);
+    }
+    (*file)->Write((void*)_data.data(), static_cast<unsigned int>(_data.size()), 1);
 }
 
 bool FileSystem::CreateDirectories(StringView _path)
@@ -73,7 +95,7 @@ bool FileSystem::CreateDirectories(StringView _path)
 StringView FileSystem::GetFileBaseName(StringView filename)
 {
     const auto baseName = GetFileName(filename);
-    const auto extensionPos = baseName.find_last_of(".");
+    const auto extensionPos = baseName.find_last_of('.');
     return baseName.substr(0, extensionPos);
 }
 
@@ -89,7 +111,7 @@ StringView FileSystem::GetFileDirectory(StringView filename)
 StringView FileSystem::GetFileExtension(StringView filename)
 {
     auto filenameOnly = GetFileName(filename);
-    return filenameOnly.substr(filenameOnly.find_last_of(".") + 1);
+    return filenameOnly.substr(filenameOnly.find_last_of('.') + 1);
 }
 
 String FileSystem::GetAbsolutePath(StringView filename)
@@ -101,7 +123,7 @@ String FileSystem::GetAbsolutePath(StringView filename)
 String FileSystem::GetExecutablePath()
 {
     CHAR path[MAX_PATH];
-    GetModuleFileNameA(NULL, path, MAX_PATH);
+    GetModuleFileNameA(nullptr, path, MAX_PATH);
     return String(GetFileDirectory(path));
     
 }
@@ -141,7 +163,7 @@ bool FileSystem::GetFileTimes(StringView filename, String& _creation, String& _a
 
     {
         FileTimeToSystemTime(&ftCreate, &stUTC);
-        SystemTimeToTzSpecificLocalTime(NULL, &stUTC, &stLocal);
+        SystemTimeToTzSpecificLocalTime(nullptr, &stUTC, &stLocal);
     
         // Build a string showing the date and time.
         _creation = StringUtils::StringFormat( 
@@ -152,7 +174,7 @@ bool FileSystem::GetFileTimes(StringView filename, String& _creation, String& _a
 
     {
         FileTimeToSystemTime(&ftWrite, &stUTC);
-        SystemTimeToTzSpecificLocalTime(NULL, &stUTC, &stLocal);
+        SystemTimeToTzSpecificLocalTime(nullptr, &stUTC, &stLocal);
     
         // Build a string showing the date and time.
         _write = StringUtils::StringFormat( 
@@ -162,7 +184,7 @@ bool FileSystem::GetFileTimes(StringView filename, String& _creation, String& _a
     }
     {
         FileTimeToSystemTime(&ftAccess, &stUTC);
-        SystemTimeToTzSpecificLocalTime(NULL, &stUTC, &stLocal);
+        SystemTimeToTzSpecificLocalTime(nullptr, &stUTC, &stLocal);
     
         // Build a string showing the date and time.
         _access = StringUtils::StringFormat( 
@@ -224,8 +246,8 @@ String FileSystem::Windows::OpenDirectoryDialog(StringView _title, void* _owner)
     std::wstring stemp = std::wstring(_title.begin(), _title.end());
     br.lpszTitle = stemp.data();
     
-    LPITEMIDLIST pidl = NULL;
-    if ((pidl = SHBrowseForFolder(&br)) != NULL)
+    LPITEMIDLIST pidl = nullptr;
+    if ((pidl = SHBrowseForFolder(&br)) != nullptr)
     {
         wchar_t buffer[MAX_PATH];
         if (SHGetPathFromIDList(pidl, buffer))
@@ -233,9 +255,9 @@ String FileSystem::Windows::OpenDirectoryDialog(StringView _title, void* _owner)
             stemp = buffer;
 
             //setup converter
+            
             using convert_type = std::codecvt_utf8<wchar_t>;
             std::wstring_convert<convert_type, wchar_t> converter;
-
             //use converter (.to_bytes: wstr->str, .from_bytes: str->wstr)
             String converted_str = converter.to_bytes( stemp );
             return converted_str;
