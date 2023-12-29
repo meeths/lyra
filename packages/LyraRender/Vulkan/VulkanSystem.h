@@ -4,6 +4,11 @@
 #include <Math/Matrix44.h>
 #include <Memory/UniquePointer.h>
 
+namespace lyra
+{
+    class VulkanShaderModuleManager;
+}
+
 // Created on 2020-08-06 by Sisco
 namespace lyra
 {
@@ -40,6 +45,7 @@ public:
     VulkanSwapchain& GetVulkanSwapchain() { return *m_swapchain; }
     VulkanTextureManager& GetVulkanTextureManager() { return *m_textureManager; }
     VulkanRenderPassManager& GetVulkanRenderPassManager() { return *m_renderPassManager; }
+    VulkanShaderModuleManager& GetVulkanShaderModuleManager() { return *m_shaderModuleManager; }
 
     static Math::Matrix44 FixProjectionMatrix(const Math::Matrix44 & _matrix)
     {
@@ -60,6 +66,7 @@ private:
     UniquePointer<VulkanCommandBufferManager> m_commandBufferManager;
     UniquePointer<VulkanRenderPassManager> m_renderPassManager;
     UniquePointer<VulkanTextureManager> m_textureManager;
+    UniquePointer<VulkanShaderModuleManager> m_shaderModuleManager;
 };
 
 }

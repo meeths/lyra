@@ -7,6 +7,7 @@
 #include <Vulkan/VulkanSwapchain.h>
 #include <Vulkan/VulkanRenderPassManager.h>
 
+#include "VulkanShaderModuleManager.h"
 #include "VulkanTextureManager.h"
 
 // Created on 2020-08-06 by Sisco
@@ -64,11 +65,14 @@ namespace lyra
         m_textureManager = MakeUniquePointer<VulkanTextureManager>(textureManagerInitInfo);
 
         m_renderPassManager = MakeUniquePointer<VulkanRenderPassManager>(*this);
+
+        m_shaderModuleManager = MakeUniquePointer<VulkanShaderModuleManager>(m_vulkanDevice->GetVkDevice());
     }    
 
     VulkanSystem::~VulkanSystem()
     {
         m_vulkanDevice->WaitForDevice();
+        m_shaderModuleManager = nullptr;
         m_renderPassManager = nullptr;
         m_commandBufferManager = nullptr;
         m_swapchain = nullptr;
