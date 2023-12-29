@@ -3,6 +3,7 @@
 #include <Log/LoggerStdout.h>
 #include <Vulkan/VulkanForwardRenderingPath.h>
 #include <Vulkan/VulkanSystem.h>
+#include <Vulkan/VulkanDevice.h>
 
 int main(int, char[])
 {
@@ -48,5 +49,6 @@ int main(int, char[])
         }));
 
     application.Run();
+    vulkanInstance.GetVulkanDevice().WaitForDevice();
     return 0;
 }
