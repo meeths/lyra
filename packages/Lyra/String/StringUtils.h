@@ -77,12 +77,17 @@ namespace StringUtils
         return dst;
     }
 
-    inline std::vector<char> ToVector(const String& _src)
+    inline Vector<char> ToVector(const String& _src)
     {
-        std::vector<char> strVector(_src.begin(), _src.end());
+        Vector<char> strVector(_src.begin(), _src.end());
         return strVector;
     }
 
+    inline String FromVector(const Vector<char>& _vector)
+    {
+        return {_vector.begin(), _vector.end()};
+    }
+    
     inline WString ToWstring(const String& _string)
     {
         Vector<wchar_t> buf(_string.size());
