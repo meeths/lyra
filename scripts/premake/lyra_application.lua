@@ -21,8 +21,9 @@ project "lyra.app"
     }
     
     filter { "system:windows" }
-    fastuptodate ("Off")
-    
+        fastuptodate ("Off")
+        postbuildcommands { "robocopy ../packages/LyraRender/shaders/GLSL %{cfg.buildtarget.directory}shaders /s /NJS /NJH /NDL /NP /NC /NS" }
+
     configureFlags()
     
     -- External libraries
@@ -63,6 +64,7 @@ project "lyra.app.editor"
 
     filter { "system:windows" }
         fastuptodate ("Off")
+        postbuildcommands { "robocopy ../packages/LyraRender/shaders/GLSL %{cfg.buildtarget.directory}shaders /s /NJS /NJH /NDL /NP /NC /NS" }
         
     configureFlags()
 

@@ -5,6 +5,10 @@
 #include <Vulkan/VulkanSystem.h>
 #include <Vulkan/VulkanDevice.h>
 
+#include <Shaders/ShaderProgram.h>
+#include <Filesystem/FileSystem.h>
+#include <Vulkan/VulkanShaderModuleManager.h>
+
 int main(int, char[])
 {
     const auto logger = MakeSharedPointer<lyra::LoggerStdout>();
@@ -31,7 +35,21 @@ int main(int, char[])
     lyra::VulkanForwardRenderingPath renderingPath(renderPathInitInfo);
 
     renderingPath.Configure();
-    
+
+
+    {
+        lyra::ShaderProgram program(lyra::ShaderConstants::ShaderType::VertexShader, lyra::FileSystem::GetExecutablePath() + "/shaders/common.vert", "main");
+            
+        program.AddDefine("PROJ_MATRIX_ONLY");
+        lyra::VulkanShaderModuleManager::ShaderModuleCreationInfo vsInfo {program};
+        vulkanInstance.GetVulkanShaderModuleManager().CreateShaderModule(lyra::String(lyra::ShaderBuiltinNames::kVertexShader_2D_PCT()), vsInfo);
+    }
+    {
+        lyra::ShaderProgram program(lyra::ShaderConstants::ShaderType::FragmentShader, lyra::FileSystem::GetExecutablePath() + "/shaders/basic.frag", "main");
+        lyra::VulkanShaderModuleManager::ShaderModuleCreationInfo fsInfo {program};
+        vulkanInstance.GetVulkanShaderModuleManager().CreateShaderModule(lyra::String(lyra::ShaderBuiltinNames::kFragmentShader_TextureColor()), fsInfo);
+    }
+
     application.GetEngineLoop().AddExecutionUnit(
         lyra::EngineLoop::Phase::PreRender,
         lyra::Task([&vulkanInstance](float){vulkanInstance.BeginFrame();}));
