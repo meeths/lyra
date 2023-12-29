@@ -5,7 +5,6 @@ namespace lyra
 {
 	VulkanShaderModule::~VulkanShaderModule()
 	{
-		Unload();
 	}
 
 	void VulkanShaderModule::Load(VkDevice _device, const Vector<char>& _code)

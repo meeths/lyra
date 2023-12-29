@@ -4,6 +4,7 @@
 #include <Filesystem/FileSystem.h>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <Log/Log.h>
 
 namespace details
@@ -16,19 +17,21 @@ namespace lyra
     Expected<String, String> ShaderSourceLoader::LoadShaderSource(StringView path)
     {
 
-        String fullSourceCode;
-        std::ifstream file(path.data());
+        const auto expectedFileContents = FileSystem::ReadFile(path);
 
-        if (!file.is_open())
+        if (!expectedFileContents)
         {
             Log::Instance().LogError("LoadShaderSource: could not open the file: %s", path.data());
             return Unexpected{"#error Could not open file " + String(path)};
         }
 
+        auto fileContents = StringUtils::FromVector(*expectedFileContents);
+        std::stringstream stringStream(fileContents);
         String currentLine;
-        while (std::getline(file, currentLine))
+        String fullSourceCode;
+        while (std::getline(stringStream, currentLine))
         {
-            if (currentLine.find(details::kIncludeIdentifier) != currentLine.npos)
+            if (currentLine.find(details::kIncludeIdentifier) != String::npos)
             {
                 currentLine.erase(0, details::kIncludeIdentifier.size());
 
@@ -46,8 +49,6 @@ namespace lyra
             }
         }
         
-        file.close();
-
         return fullSourceCode;
     
     };    

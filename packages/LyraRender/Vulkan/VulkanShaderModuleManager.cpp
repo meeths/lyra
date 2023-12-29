@@ -40,12 +40,13 @@ namespace lyra
         
         if(compiledShader.empty())
         {
+            lyraLogError("Error creating shader module %s ", moduleName.c_str());
             return;
         }
         
         VulkanShaderModule module;
         module.Load(m_Device, compiledShader);
-        m_ShaderModules[moduleName] = module;
+        m_ShaderModules[moduleName] = std::move(module);
         m_ShaderModuleInfos[moduleName] = _info;
     }
 
@@ -75,7 +76,7 @@ namespace lyra
             code
             );
 
-        if(compiledShader.size() == 0)
+        if(compiledShader.empty())
         {
             Log::Instance().LogError("Error compiling shader");
             return;
@@ -86,7 +87,7 @@ namespace lyra
         
         VulkanShaderModule module;
         module.Load(m_Device, compiledShader);
-        m_ShaderModules[moduleName] = module;
+        m_ShaderModules[moduleName] = std::move(module);
     }
 
     void VulkanShaderModuleManager::RecompileAllShaderModules()
