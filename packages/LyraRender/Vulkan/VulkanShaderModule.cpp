@@ -10,23 +10,23 @@ namespace lyra
 	void VulkanShaderModule::Load(VkDevice _device, const Vector<char>& _code)
 	{
 		Unload();
-		mDevice = _device;
+		m_Device = _device;
 
 		VkShaderModuleCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 		createInfo.codeSize = _code.size();
 		createInfo.pCode = reinterpret_cast<const uint32_t*>(_code.data());
-		if (vkCreateShaderModule(mDevice, &createInfo, nullptr, &mShaderModule) != VK_SUCCESS) 
+		if (vkCreateShaderModule(m_Device, &createInfo, nullptr, &m_ShaderModule) != VK_SUCCESS) 
 			lyraAssert(0 && "failed to create shader module!");
 	}
 
 	void VulkanShaderModule::Unload()
 	{
-		if(mDevice && mShaderModule)
+		if(m_Device && m_ShaderModule)
 		{
-			vkDestroyShaderModule(mDevice, mShaderModule, nullptr);
-			mShaderModule = nullptr;
-			mDevice = nullptr;
+			vkDestroyShaderModule(m_Device, m_ShaderModule, nullptr);
+			m_ShaderModule = nullptr;
+			m_Device = nullptr;
 		}
 	}
 }

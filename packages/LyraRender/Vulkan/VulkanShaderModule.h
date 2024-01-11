@@ -16,10 +16,10 @@ public:
 	~VulkanShaderModule();
 	void Load(VkDevice _device, const Vector<char>& _code);
 	void Unload();
-	VkShaderModule GetVkShaderModule() const { return mShaderModule; }
+	VkShaderModule GetVkShaderModule() const { return m_ShaderModule; }
 protected:
-	VkDevice mDevice = nullptr;
-	VkShaderModule mShaderModule = nullptr;
+	VkDevice m_Device = nullptr;
+	VkShaderModule m_ShaderModule = nullptr;
 };
 
 }
