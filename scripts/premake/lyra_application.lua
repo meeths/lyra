@@ -41,9 +41,8 @@ project "lyra.app"
     filter {}
 
 project "lyra.app.editor"
-    kind "ConsoleApp"
+    kind "WindowedApp"
     links { "lyra.core" , "lyra.render", "lyra.editor" }
-
     language "C++"
     targetdir "%{BASE_DIR}bin/lyra.app.editor./%{cfg.buildcfg}"
 
@@ -67,7 +66,6 @@ project "lyra.app.editor"
         postbuildcommands { "robocopy ../packages/LyraRender/shaders/GLSL %{cfg.buildtarget.directory}shaders /s /NJS /NJH /NDL /NP /NC /NS" }
         
     configureFlags()
-
     -- External libraries
     links { "lyra.external.imgui" }
     includeImGui()
@@ -77,6 +75,8 @@ project "lyra.app.editor"
 
     linkGLFW()
     linkVulkan()
+
+    setupwxWidgets()
 
  -- End external libraries
 
