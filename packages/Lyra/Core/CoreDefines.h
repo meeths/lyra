@@ -9,7 +9,11 @@
 #define DeclareDefaultMoveable(classname)     classname(classname &&) = default; classname &operator=(classname &&a) = default
 
 
-#define lyraAssert(x) assert(x)
+#ifndef NDEBUG
+    #define lyraAssert(x) assert(x)
+#else
+    #define lyraAssert(x) do { (void)sizeof(x);} while (0)
+#endif
 
 #define DefineGlobalConstexprVariableAccessor(classname, name, value)     inline static constexpr classname name()\
     { return value;}

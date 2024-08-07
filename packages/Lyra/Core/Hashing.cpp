@@ -1,6 +1,6 @@
 
 #include <Core/Hashing.h>
-#include <Core/hash/Hashes.h>
+#include <Core/Hash/Hashes.h>
 
 // Created on 2021-11-21 by Sisco
 

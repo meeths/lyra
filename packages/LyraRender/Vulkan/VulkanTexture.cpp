@@ -133,8 +133,8 @@ namespace lyra
         barrier.subresourceRange.layerCount = _layerCount;
         barrier.subresourceRange.aspectMask = GetAspectFlagsFromLayoutAndFormat(newLayout, format);
         
-        VkPipelineStageFlags sourceStage;
-        VkPipelineStageFlags destinationStage;
+        VkPipelineStageFlags sourceStage {};
+        VkPipelineStageFlags destinationStage {};
 
         if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) 
         {
@@ -178,7 +178,7 @@ namespace lyra
         }
         else 
         {
-            throw std::invalid_argument("unsupported layout transition!");
+            lyraAssert(0 && "unsupported layout transition!");
         }
 
         vkCmdPipelineBarrier(

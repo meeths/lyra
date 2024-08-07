@@ -1,15 +1,17 @@
 BASE_DIR = _MAIN_SCRIPT_DIR .. "/"
 
 function configureFlags()
-    flags { "FatalWarnings", "MultiProcessorCompile" }    
-    staticruntime "Off"
+    flags { "FatalCompileWarnings", "MultiProcessorCompile" }    
+    --staticruntime "Off"
     filter {"configurations:Release"}
         flags { "LinkTimeOptimization" }        
     filter {}
-    defines { "NOMINMAX" }
+    --defines { "NOMINMAX" }
+    toolset "clang"
     cppdialect "C++20"
     editAndContinue "Off"
     exceptionhandling "Off"
+    characterset "Unicode"
 end
 
 function setConfigurations()
@@ -32,7 +34,7 @@ workspace "lyra"
     targetdir "%{BASE_DIR}bin/lyra/%{cfg.buildcfg}"
 
     filter { "platforms:Win64" }
-        system "Windows"
+    system "Windows"
         architecture "x64"
 
     filter {}

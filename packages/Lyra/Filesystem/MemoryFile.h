@@ -14,7 +14,7 @@ public:
 	{
 	}
 	DeclareNonCopyable(MemoryFile);
-	DeclareDefaultMoveable(MemoryFile);
+	//DeclareDefaultMoveable(MemoryFile);
 
 
 	void Open(FileConstants::OpenMode openMode) override;

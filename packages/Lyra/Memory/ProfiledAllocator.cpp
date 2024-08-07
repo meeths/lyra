@@ -1,8 +1,8 @@
 
 #include <Memory/ProfiledAllocator.h>
-#include <Tracy/Tracy.hpp>
+#include <tracy/Tracy.hpp>
 
-void* operator new(std :: size_t count)
+void* operator new(std::size_t count)
 {
     auto ptr = malloc(count);
     TracyAllocS (ptr , count, 20);

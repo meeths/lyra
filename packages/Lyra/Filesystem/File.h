@@ -2,7 +2,7 @@
 #include <Filesystem/IFile.h>
 #include <String/String.h>
 #include <fstream>
-#include <core/CoreDefines.h>
+#include <Core/CoreDefines.h>
 
 namespace lyra
 {

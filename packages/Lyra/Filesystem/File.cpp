@@ -34,8 +34,8 @@ void File::Close()
 
 unsigned long File::Read(void* buffer, unsigned long size, unsigned long elementSize)
 {
-	if(!IsOpen())
-		throw::std::runtime_error("Reading closed file");
+	lyraAssert(IsOpen());
+
 	m_Stream.read(static_cast<char*>(buffer), size * elementSize);
 	if(m_Stream)
 		return size * elementSize;
@@ -45,8 +45,7 @@ unsigned long File::Read(void* buffer, unsigned long size, unsigned long element
 
 unsigned long File::Write(const void* buffer, unsigned long size, unsigned long elementSize)
 {
-	if(!IsOpen())
-		throw::std::runtime_error("Writing closed file");
+	lyraAssert(IsOpen());
 
 	m_Stream.write(static_cast<const char*>(buffer), size * elementSize);
 	return size * elementSize;
@@ -54,8 +53,7 @@ unsigned long File::Write(const void* buffer, unsigned long size, unsigned long 
 
 	unsigned long File::GetPosition()
 {
-	if(!IsOpen())
-		throw::std::runtime_error("Reading closed file");
+	lyraAssert(IsOpen());
 	return static_cast<unsigned long>(m_Stream.tellg());
 }
 

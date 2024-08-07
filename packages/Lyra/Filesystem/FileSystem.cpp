@@ -20,7 +20,7 @@ Expected<SharedPointer<IFile>, String> FileSystem::OpenFile(StringView filename,
     file->Open(openMode);
     if(!file->IsOpen())
     {
-        return Unexpected{"Could not open file " + String(filename)};
+        return Unexpected<String>{"Could not open file " + String(filename)};
     }
     return file;
 }
@@ -30,7 +30,7 @@ Expected<uint64, String> FileSystem::GetFileSize(StringView filename)
     if(!FileExists(filename))
     {
         lyraAssert(0 && "Error retrieving size of non existent file.");
-        return Unexpected{"Could not open file " + String(filename)};
+        return Unexpected<String>{"Could not open file " + String(filename)};
         
     }
     struct stat buffer{};
@@ -52,13 +52,13 @@ Expected<Vector<char>, String> FileSystem::ReadFile(StringView filename)
     if(!locatedFile)
     {
         lyraAssert(0 && "File does not exist");
-        return Unexpected{"Could not open file " + String(filename)};
+        return Unexpected<String>{"Could not open file " + String(filename)};
     }
 
     auto expectedFileSize = GetFileSize(filename);
     if(!expectedFileSize)
     {
-        return Unexpected(expectedFileSize.error());
+        return Unexpected<String>(expectedFileSize.error());
     }
     const auto fileSize = *expectedFileSize;
     
@@ -212,7 +212,7 @@ String FileSystem::GetRelativePath(StringView filename)
 String FileSystem::Windows::OpenFileDialog(const char* _filter, void* _owner)
 {
     TCHAR curDir[MAX_PATH];
-    DWORD a = GetCurrentDirectory(MAX_PATH, curDir);
+    GetCurrentDirectory(MAX_PATH, curDir);
 
     OPENFILENAMEA ofn;
     char fileName[MAX_PATH] = "";

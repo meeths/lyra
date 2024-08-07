@@ -546,7 +546,7 @@ void testHash ( const char * name )
   }
 }
 //-----------------------------------------------------------------------------
-
+#if 0
 int main ( int argc, char ** argv )
 {
   const char * hashToTest = "murmur3a";
@@ -595,3 +595,4 @@ int main ( int argc, char ** argv )
   printf("-------------------------------------------------------------------------------\n");
   return 0;
 }
+#endif

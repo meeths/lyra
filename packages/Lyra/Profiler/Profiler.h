@@ -1,6 +1,6 @@
 
 #pragma once
-#include <Tracy/Tracy.hpp>
+#include "tracy/Tracy.hpp"
 
 #define ProfileFrameMark FrameMark
 

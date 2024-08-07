@@ -22,7 +22,7 @@ namespace lyra
         if (!expectedFileContents)
         {
             Log::Instance().LogError("LoadShaderSource: could not open the file: %s", path.data());
-            return Unexpected{"#error Could not open file " + String(path)};
+            return Unexpected<String>{"#error Could not open file " + String(path)};
         }
 
         auto fileContents = StringUtils::FromVector(*expectedFileContents);
@@ -41,7 +41,7 @@ namespace lyra
                 auto includeSource = LoadShaderSource(fileDirectory + "/" + currentLine);
                 fullSourceCode += includeSource.value_or(includeSource.error());
                 if(!includeSource.has_value())
-                    return Unexpected(fullSourceCode);
+                    return Unexpected<String>(fullSourceCode);
             }
             else
             {

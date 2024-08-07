@@ -2,7 +2,7 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include <Vulkan/VulkanQueue.h>
-#include <Tracy/TracyVulkan.hpp>
+#include <tracy/TracyVulkan.hpp>
 // Created on 2018-12-27 by sisco
 
 namespace lyra
@@ -50,8 +50,8 @@ class ScopedVulkanCommandBuffer
 {
 public:
     ScopedVulkanCommandBuffer(VkDevice _device, VkCommandPool _commandPool, const VulkanQueue& _queue) :
-        mCommandBuffer({_device, _commandPool, 1}),
-        mQueue(_queue)
+        mQueue(_queue),
+        mCommandBuffer({_device, _commandPool, 1})
     {
         mCommandBuffer.BeginRecording();
     }

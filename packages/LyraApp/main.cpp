@@ -9,7 +9,7 @@
 #include <Filesystem/FileSystem.h>
 #include <Vulkan/VulkanShaderModuleManager.h>
 
-int main(int, char[])
+int main(int, char**)
 {
     const auto logger = MakeSharedPointer<lyra::LoggerStdout>();
     lyra::Log::Instance().RegisterLogger(logger);

@@ -29,60 +29,60 @@ namespace
     }
 
     struct PixelColor { unsigned char r, g, b, a; };
-    void CreateSolidColorTexture(lyra::StringView _textureName, PixelColor _color, lyra::Math::Vector2i _dimensions, lyra::VulkanTextureManager& _textureManager)
-    {
-        lyra::Array<PixelColor, 8*8> pixels;
-        pixels.fill(_color);
-        const lyra::VulkanTexture::CreationInfo textureCreationInfo
-        {
-            _dimensions,
-            lyra::VulkanUtils::GetMipLevels(_dimensions),
-            1,
-            lyra::TextureType::Texture,
-            VK_FORMAT_R8G8B8A8_UNORM,
-            VK_IMAGE_TILING_OPTIMAL,
-        };
-        _textureManager.CreateTexture(_textureName, textureCreationInfo);
-        const lyra::VulkanTextureManager::BlitInfo blitInfo
-        {
-            textureCreationInfo.m_Dimensions,
-            textureCreationInfo.m_Format,
-            reinterpret_cast<char*>(pixels.data())
-        };
-        _textureManager.BlitToTexture(_textureName, blitInfo);
-
-    }
-
-    void CreateCheckerboardTexture(lyra::StringView _textureName, PixelColor _color1, PixelColor _color2, lyra::Math::Vector2i _dimensions, lyra::VulkanTextureManager& _textureManager)
-    {
-        lyra::Vector<PixelColor> pixels(_dimensions.x*_dimensions.y);
-
-        for (int i = 0; i < _dimensions.x; i++)
-            for (int j = 0; j < _dimensions.y; j++)
-                pixels[j * _dimensions.x + i] = i & 1 ? (j & 1 ? _color1 : _color2) : (j & 1 ? _color2 : _color1);
-        
-        const lyra::VulkanTexture::CreationInfo textureCreationInfo
-        {
-            _dimensions,
-            lyra::VulkanUtils::GetMipLevels(_dimensions),
-            1,
-            lyra::TextureType::Texture,
-            VK_FORMAT_R8G8B8A8_UNORM,
-            VK_IMAGE_TILING_OPTIMAL,
-            VK_FILTER_NEAREST,
-            VK_FILTER_NEAREST,
-            VK_SAMPLER_MIPMAP_MODE_NEAREST
-        };
-        _textureManager.CreateTexture(_textureName, textureCreationInfo);
-        const lyra::VulkanTextureManager::BlitInfo blitInfo
-        {
-            textureCreationInfo.m_Dimensions,
-            textureCreationInfo.m_Format,
-            reinterpret_cast<char*>(pixels.data())
-        };
-        _textureManager.BlitToTexture(_textureName, blitInfo);
-
-    }
+    // void CreateSolidColorTexture(lyra::StringView _textureName, PixelColor _color, lyra::Math::Vector2i _dimensions, lyra::VulkanTextureManager& _textureManager)
+    // {
+    //     lyra::Array<PixelColor, 8*8> pixels;
+    //     pixels.fill(_color);
+    //     const lyra::VulkanTexture::CreationInfo textureCreationInfo
+    //     {
+    //         _dimensions,
+    //         lyra::VulkanUtils::GetMipLevels(_dimensions),
+    //         1,
+    //         lyra::TextureType::Texture,
+    //         VK_FORMAT_R8G8B8A8_UNORM,
+    //         VK_IMAGE_TILING_OPTIMAL,
+    //     };
+    //     _textureManager.CreateTexture(_textureName, textureCreationInfo);
+    //     const lyra::VulkanTextureManager::BlitInfo blitInfo
+    //     {
+    //         textureCreationInfo.m_Dimensions,
+    //         textureCreationInfo.m_Format,
+    //         reinterpret_cast<char*>(pixels.data())
+    //     };
+    //     _textureManager.BlitToTexture(_textureName, blitInfo);
+    //
+    // }
+    //
+    // void CreateCheckerboardTexture(lyra::StringView _textureName, PixelColor _color1, PixelColor _color2, lyra::Math::Vector2i _dimensions, lyra::VulkanTextureManager& _textureManager)
+    // {
+    //     lyra::Vector<PixelColor> pixels(_dimensions.x*_dimensions.y);
+    //
+    //     for (int i = 0; i < _dimensions.x; i++)
+    //         for (int j = 0; j < _dimensions.y; j++)
+    //             pixels[j * _dimensions.x + i] = i & 1 ? (j & 1 ? _color1 : _color2) : (j & 1 ? _color2 : _color1);
+    //     
+    //     const lyra::VulkanTexture::CreationInfo textureCreationInfo
+    //     {
+    //         _dimensions,
+    //         lyra::VulkanUtils::GetMipLevels(_dimensions),
+    //         1,
+    //         lyra::TextureType::Texture,
+    //         VK_FORMAT_R8G8B8A8_UNORM,
+    //         VK_IMAGE_TILING_OPTIMAL,
+    //         VK_FILTER_NEAREST,
+    //         VK_FILTER_NEAREST,
+    //         VK_SAMPLER_MIPMAP_MODE_NEAREST
+    //     };
+    //     _textureManager.CreateTexture(_textureName, textureCreationInfo);
+    //     const lyra::VulkanTextureManager::BlitInfo blitInfo
+    //     {
+    //         textureCreationInfo.m_Dimensions,
+    //         textureCreationInfo.m_Format,
+    //         reinterpret_cast<char*>(pixels.data())
+    //     };
+    //     _textureManager.BlitToTexture(_textureName, blitInfo);
+    //
+    // }
 }
 namespace lyra
 {
@@ -357,7 +357,7 @@ namespace lyra
 
         if (vkCreateSampler(m_Device, &samplerInfo, nullptr, &sampler) != VK_SUCCESS)
         {
-            throw std::runtime_error("failed to create texture sampler!");
+            lyraAssert(0 && "failed to create texture sampler!");
         }
         mTextureSamplers[_textureName] = sampler;
 

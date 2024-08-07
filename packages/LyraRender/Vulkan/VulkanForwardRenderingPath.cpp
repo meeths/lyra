@@ -13,7 +13,7 @@
 namespace
 {
     
-    lyra::ConstStringHash g_debugPassName = "DebugRenderPass"; 
+    //lyra::ConstStringHash g_debugPassName = "DebugRenderPass"; 
     lyra::ConstStringHash g_debugPassCommandBufferName = "DebugPassCommandBuffer"; 
 }
 

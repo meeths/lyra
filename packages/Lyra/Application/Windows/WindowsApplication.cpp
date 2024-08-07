@@ -55,7 +55,7 @@ WindowsApplication::~WindowsApplication()
 void WindowsApplication::Run()
 {
 	Chronometer<> chrono;
-	const auto windowHandle = m_applicationWindow->GetWindowHandle();
+	//const auto windowHandle = m_applicationWindow->GetWindowHandle();
 	chrono.Start();
 
 	while (!m_applicationWindow->CloseRequested())

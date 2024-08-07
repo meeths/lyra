@@ -15,6 +15,7 @@
 
 namespace
 {
+#ifdef DEBUG
     void LogDeviceSpecs(VkPhysicalDevice device)
     {
         VkPhysicalDeviceProperties deviceProperties;
@@ -25,7 +26,7 @@ namespace
         std::cout << "Device specs:" << std::endl;
         std::cout << "\t Name - \t\t " << deviceProperties.deviceName << std::endl;
     }
-
+#endif
     lyra::Vector<const char*> kRequiredExtensionNames = {
         VK_KHR_SWAPCHAIN_EXTENSION_NAME
     };

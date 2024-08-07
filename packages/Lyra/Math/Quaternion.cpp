@@ -46,12 +46,17 @@ void Quaternion::FromMatrix33 (const Matrix33& matrix)
     else
     {
         // |w| <= 1/2
-        static const int NextIndex[3] = { 1, 2, 0 };
+        static constexpr int NextIndex[3] = { 1, 2, 0 };
         int i = 0;
         if ( matrix[1][1] > matrix[0][0] )
-            i = 1;
+        {
+	        i = 1;
+        }
         if ( matrix[2][2] > matrix[i][i] )
-            i = 2;
+        {
+	        i = 2;
+        }
+    	
 	    const auto j = NextIndex[i];
 	    const auto k = NextIndex[j];
 
@@ -155,7 +160,7 @@ float Quaternion::GetRoll(bool reprojectAxis) const
     {
         // roll = atan2(localx.y, localx.x)
         // pick parts of xAxis() implementation that we need
-        float fTx = 2.0f*x;
+        //float fTx = 2.0f*x;
         float fTy = 2.0f*y;
         float fTz = 2.0f*z;
         float fTwz = fTz * w;
@@ -181,7 +186,7 @@ float Quaternion::GetPitch(bool reprojectAxis) const
         // pitch = atan2(localy.z, localy.y)
         // pick parts of yAxis() implementation that we need
         float fTx = 2.0f*x;
-        float fTy = 2.0f*y;
+        //float fTy = 2.0f*y;
         float fTz = 2.0f*z;
         float fTwx = fTx * w;
         float fTxx = fTx * x;

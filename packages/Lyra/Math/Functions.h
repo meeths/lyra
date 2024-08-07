@@ -20,8 +20,8 @@ namespace lyra { namespace Math
     template <typename T> T ATan2(T val, T val2) { return std::atan2(val, val2); };
     template <typename T> T Sign(T val) { return std::signbit(val) ? -1.0f : 1.0f; };
 
-	template <typename T> T Min(const T& a, const T& b) { return std::min(a, b); };
-	template <typename T> T Max(const T& a, const T& b) { return std::max(a, b); };
+	template <typename T> T Min(const T& a, const T& b) { return a < b ? a : b; };
+	template <typename T> T Max(const T& a, const T& b) { return a > b ? a : b; };
 
 	template <typename T> T Floor(const T& a) { return static_cast<T>(std::floor(a)); };
 

@@ -80,41 +80,41 @@ void Bitslice ( std::vector<hashtype> & hashes, slice_vec & slices )
 
 void FactorSlices ( slice_vec & slices )
 {
-  std::vector<int> counts(slices.size(),0);
-
-  for(size_t i = 0; i < slices.size(); i++)
-  {
-    counts[i] = countbits(slices[i]);
-  }
-
-  bool changed = true;
-
-  while(changed)
-  {
-    int bestA = -1;
-    int bestB = -1;
-
-    for(int j = 0; j < (int)slices.size()-1; j++)
-    {
-      for(int i = j+1; i < (int)slices.size(); i++)
-      {
-        int d = countxor(slices[i],slices[j]);
-
-        if((d < counts[i]) && (d < counts[j]))
-        {
-          if(counts[i] < counts[j])
-          {
-            bestA = j;
-            bestB = i;
-          }
-        }
-        else if(d < counts[i])
-        {
-          //bestA = 
-        }
-      }
-    }
-  }
+  // std::vector<int> counts(slices.size(),0);
+  //
+  // for(size_t i = 0; i < slices.size(); i++)
+  // {
+  //   counts[i] = countbits(slices[i]);
+  // }
+  //
+  // bool changed = true;
+  //
+  // while(changed)
+  // {
+  //   int bestA = -1;
+  //   int bestB = -1;
+  //
+  //   for(int j = 0; j < (int)slices.size()-1; j++)
+  //   {
+  //     for(int i = j+1; i < (int)slices.size(); i++)
+  //     {
+  //       int d = countxor(slices[i],slices[j]);
+  //
+  //       if((d < counts[i]) && (d < counts[j]))
+  //       {
+  //         if(counts[i] < counts[j])
+  //         {
+  //           bestA = j;
+  //           bestB = i;
+  //         }
+  //       }
+  //       else if(d < counts[i])
+  //       {
+  //         //bestA = 
+  //       }
+  //     }
+  //   }
+  // }
 }
 
 
