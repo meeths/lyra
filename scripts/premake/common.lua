@@ -35,6 +35,6 @@ workspace "lyra"
 
     filter { "platforms:Win64" }
     system "Windows"
-        architecture "x64"
+    architecture "x64"
 
     filter {}

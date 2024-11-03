@@ -44,8 +44,8 @@ project "lyra.app.editor"
     kind "WindowedApp"
     links { "lyra.core" , "lyra.render", "lyra.editor" }
     language "C++"
-    targetdir "%{BASE_DIR}bin/lyra.app.editor./%{cfg.buildcfg}"
-
+    targetdir "%{BASE_DIR}bin/lyra.app.editor/%{cfg.buildcfg}"
+    debugdir "%{BASE_DIR}bin/lyra.app.editor/%{cfg.buildcfg}"
     files { 
         "%{BASE_DIR}packages/LyraAppEditor/**.h", 
         "%{BASE_DIR}packages/LyraAppEditor/**.hpp", 
@@ -76,7 +76,6 @@ project "lyra.app.editor"
     linkGLFW()
     linkVulkan()
 
-    setupwxWidgets()
 
  -- End external libraries
 
