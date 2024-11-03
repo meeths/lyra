@@ -74,9 +74,11 @@ project "lyra.app.editor"
     includeTaskFlow()
     includeGLFW()
     includeVulkan()
+    includeQt()
 
     linkGLFW()
     linkVulkan()
+    linkQt()
 
 
  -- End external libraries
