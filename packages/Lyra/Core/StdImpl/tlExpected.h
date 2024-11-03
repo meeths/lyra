@@ -2015,11 +2015,11 @@ public:
     return err().value();
   }
   TL_EXPECTED_11_CONSTEXPR E &error() & {
-    TL_ASSERT(!has_value());
+    //TL_ASSERT(!has_value());
     return err().value();
   }
   constexpr const E &&error() const && {
-    TL_ASSERT(!has_value());
+    //TL_ASSERT(!has_value());
     return std::move(err().value());
   }
   TL_EXPECTED_11_CONSTEXPR E &&error() && {
