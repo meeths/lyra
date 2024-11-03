@@ -41,7 +41,7 @@ project "lyra.app"
     filter {}
 
 project "lyra.app.editor"
-    kind "WindowedApp"
+    kind "ConsoleApp"
     links { "lyra.core" , "lyra.render", "lyra.editor" }
     language "C++"
     targetdir "%{BASE_DIR}bin/lyra.app.editor/%{cfg.buildcfg}"
@@ -64,7 +64,9 @@ project "lyra.app.editor"
     filter { "system:windows" }
         fastuptodate ("Off")
         postbuildcommands { "robocopy ../packages/LyraRender/shaders/GLSL %{cfg.buildtarget.directory}shaders /s /NJS /NJH /NDL /NP /NC /NS" }
-        
+        postbuildcommands { "robocopy ../external/fatcow/ %{cfg.buildtarget.directory}icons/fatcow /s /NJS /NJH /NDL /NP /NC /NS" }
+
+    filter {}
     configureFlags()
     -- External libraries
     links { "lyra.external.imgui" }
