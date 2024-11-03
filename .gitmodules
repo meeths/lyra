@@ -13,3 +13,6 @@
 [submodule "external/tracy"]
 	path = external/tracy
 	url = https://github.com/wolfpld/tracy.git
+[submodule "external/qt/qtbase"]
+	path = external/qt/qtbase
+	url = https://github.com/qt/qtbase.git
