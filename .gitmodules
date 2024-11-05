@@ -16,3 +16,6 @@
 [submodule "external/qt/qtbase"]
 	path = external/qt/qtbase
 	url = https://github.com/qt/qtbase.git
+[submodule "external/glm"]
+	path = external/glm
+	url = https://github.com/icaven/glm.git

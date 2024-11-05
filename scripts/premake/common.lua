@@ -1,5 +1,12 @@
 BASE_DIR = _MAIN_SCRIPT_DIR .. "/"
 
+include "scripts/premake/external/glm.lua"
+
+function configureCommonExternals()
+    filter {}
+    includeGLM()
+end
+
 function configureFlags()
     flags { "FatalCompileWarnings", "MultiProcessorCompile" }    
     --staticruntime "Off"
@@ -23,7 +30,7 @@ function setConfigurations()
     filter "configurations:Release"
         defines { "NDEBUG" }
         optimize "Speed"
-        runtime "Release"
+        runtime "Release"        
 end
 
 workspace "lyra"

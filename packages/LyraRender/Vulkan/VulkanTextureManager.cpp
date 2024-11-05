@@ -5,7 +5,9 @@
 #include <Vulkan/VulkanStagingBuffer.h>
 #include <Vulkan/VulkanTexture.h>
 #include <Vulkan/VulkanUtils.h>
-#include <Math/Vector4f.h>
+#include <glm/geometric.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 #include <Filesystem/FileSystem.h>
 // #include <Resources/Image/ImageDescriptor.h>
 // #include <Resources/Image/ImageImporter.h>
@@ -29,7 +31,7 @@ namespace
     }
 
     struct PixelColor { unsigned char r, g, b, a; };
-    // void CreateSolidColorTexture(lyra::StringView _textureName, PixelColor _color, lyra::Math::Vector2i _dimensions, lyra::VulkanTextureManager& _textureManager)
+    // void CreateSolidColorTexture(lyra::StringView _textureName, PixelColor _color, lyra::glm::ivec2 _dimensions, lyra::VulkanTextureManager& _textureManager)
     // {
     //     lyra::Array<PixelColor, 8*8> pixels;
     //     pixels.fill(_color);
@@ -53,7 +55,7 @@ namespace
     //
     // }
     //
-    // void CreateCheckerboardTexture(lyra::StringView _textureName, PixelColor _color1, PixelColor _color2, lyra::Math::Vector2i _dimensions, lyra::VulkanTextureManager& _textureManager)
+    // void CreateCheckerboardTexture(lyra::StringView _textureName, PixelColor _color1, PixelColor _color2, lyra::glm::ivec2 _dimensions, lyra::VulkanTextureManager& _textureManager)
     // {
     //     lyra::Vector<PixelColor> pixels(_dimensions.x*_dimensions.y);
     //
@@ -462,12 +464,12 @@ namespace lyra
         return float(double(bits) * 2.3283064365386963e-10);
     }
 
-    Math::Vector2f Hammersley(unsigned int i, unsigned int N)
+    glm::vec2 Hammersley(unsigned int i, unsigned int N)
     {
-        return Math::Vector2f(float(i) / float(N), RadicalInverse_VdC(i));
+        return glm::vec2(float(i) / float(N), RadicalInverse_VdC(i));
     }
 
-    Math::Vector3f ImportanceSampleGGX(Math::Vector2f Xi, float roughness, Math::Vector3f N)
+    glm::vec3 ImportanceSampleGGX(glm::vec2 Xi, float roughness, glm::vec3 N)
     {
         float a = roughness * roughness;
 
@@ -476,18 +478,18 @@ namespace lyra
         float sinTheta = sqrt(1.0f - cosTheta * cosTheta);
 
         // from spherical coordinates to cartesian coordinates
-        Math::Vector3f H;
+        glm::vec3 H;
         H.x = cos(phi) * sinTheta;
         H.y = sin(phi) * sinTheta;
         H.z = cosTheta;
 
         // from tangent-space vector to world-space sample vector
-        Math::Vector3f up = abs(N.z) < 0.999f ? Math::Vector3f(0.0, 0.0, 1.0) : Math::Vector3f(1.0f, 0.0, 0.0);
-        Math::Vector3f tangent = up.Cross(N).NormalizedCopy();
-        Math::Vector3f bitangent = N.Cross(tangent);
+        glm::vec3 up = abs(N.z) < 0.999f ? glm::vec3(0.0, 0.0, 1.0) : glm::vec3(1.0f, 0.0, 0.0);
+        glm::vec3 tangent = glm::normalize(glm::cross(up, N));
+        glm::vec3 bitangent = glm::cross(N, tangent);
 
-        Math::Vector3f sampleVec = tangent * H.x + bitangent * H.y + N * H.z;
-        return sampleVec.NormalizedCopy();
+        glm::vec3 sampleVec = tangent * H.x + bitangent * H.y + N * H.z;
+        return glm::normalize(sampleVec);
     }
 
     float GeometrySchlickGGX(float NdotV, float roughness)
@@ -509,9 +511,9 @@ namespace lyra
         return ggx1 * ggx2;
     }
 
-    Math::Vector2f IntegrateBRDF(float NdotV, float roughness, unsigned int samples)
+    glm::vec2 IntegrateBRDF(float NdotV, float roughness, unsigned int samples)
     {
-        Math::Vector3f V;
+        glm::vec3 V;
         V.x = sqrt(1.0f - NdotV * NdotV);
         V.y = 0.0;
         V.z = NdotV;
@@ -519,18 +521,18 @@ namespace lyra
         float A = 0.0;
         float B = 0.0;
 
-        Math::Vector3f N = Math::Vector3f(0.0, 0.0, 1.0);
+        glm::vec3 N = glm::vec3(0.0, 0.0, 1.0);
 
         for (unsigned int i = 0u; i < samples; ++i)
         {
-            Math::Vector2f Xi = Hammersley(i, samples);
-            Math::Vector3f H = ImportanceSampleGGX(Xi, roughness, N);
-            Math::Vector3f L = (2.0f * V.Dot(H) * H - V).NormalizedCopy();
+            glm::vec2 Xi = Hammersley(i, samples);
+            glm::vec3 H = ImportanceSampleGGX(Xi, roughness, N);
+            glm::vec3 L = glm::normalize(2.0f * glm::dot(V, H) * H - V);
 
             float NoL = Math::Max(L.z, 0.0f);
             float NoH = Math::Max(H.z, 0.0f);
-            float VoH = Math::Max(V.Dot(H), 0.0f);
-            float NoV = Math::Max(N.Dot(V), 0.0f);
+            float VoH = Math::Max(glm::dot(V,H), 0.0f);
+            float NoV = Math::Max(glm::dot(N, V), 0.0f);
 
             if (NoL > 0.0)
             {
@@ -544,7 +546,7 @@ namespace lyra
             }
         }
 
-        return Math::Vector2f(A / float(samples), B / float(samples));
+        return glm::vec2(A / float(samples), B / float(samples));
     }
     
     void VulkanTextureManager::CreateBRDFLUTTexture()
@@ -552,7 +554,7 @@ namespace lyra
         // int samples = 512;
         // const int size = 128;
         //
-        // Array<Math::Vector2f, size * size> pixels;  
+        // Array<glm::vec2, size * size> pixels;  
         //
         // for (int y = 0; y < size; y++)
         // {

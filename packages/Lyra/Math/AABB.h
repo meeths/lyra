@@ -1,6 +1,6 @@
 #pragma once
-#include <Math/Vector3f.h>
-#include <Math/Matrix44.h>
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
 
 namespace lyra
 {
@@ -10,25 +10,25 @@ namespace lyra
 	{
 	public:
 		AABB() : m_Valid{false} {};
-		AABB(Vector3f _min, Vector3f _max) : m_Min(std::move(_min)), m_Max(std::move(_max)), m_Valid{true} {};
+		AABB(glm::vec3 _min, glm::vec3 _max) : m_Min(std::move(_min)), m_Max(std::move(_max)), m_Valid{true} {};
 		bool IsValid() const { return m_Valid; };
-		const Vector3f& GetMin() const {return m_Min;};
-		const Vector3f& GetMax() const {return m_Max;};
+		const glm::vec3& GetMin() const {return m_Min;};
+		const glm::vec3& GetMax() const {return m_Max;};
 
 		bool operator==(const AABB& other) const;
-        AABB& operator+=(const Vector3f& point);
+        AABB& operator+=(const glm::vec3& point);
         AABB& operator+=(const AABB& _other);
-        AABB operator+(const Vector3f& point) const { return AABB(*this) += point; };
+        AABB operator+(const glm::vec3& point) const { return AABB(*this) += point; };
         AABB operator+(const AABB& other) const { return AABB(*this) += other; };
 
-        Vector3f GetCenter() const;
-        Vector3f GetExtent() const;
-        Vector3f GetFullExtent() const;
+        glm::vec3 GetCenter() const;
+        glm::vec3 GetExtent() const;
+        glm::vec3 GetFullExtent() const;
 
-        AABB GetTransformed(const Matrix44& _matrix) const;
+        AABB GetTransformed(const glm::mat4x4& _matrix) const;
 	private:
-		Vector3f m_Min;
-		Vector3f m_Max;
+		glm::vec3 m_Min;
+		glm::vec3 m_Max;
 		bool m_Valid;
 
 	};
@@ -38,12 +38,12 @@ inline bool AABB::operator==(const AABB & other) const
 	return m_Max == other.m_Max && m_Min == other.m_Min;
 }
 
-inline AABB& AABB::operator+=(const Vector3f & point)
+inline AABB& AABB::operator+=(const glm::vec3 & point)
 {
         if (m_Valid)
         {
-            m_Min.MakeFloor( point );
-            m_Max.MakeCeil( point );
+            m_Min = glm::min(m_Min, point);
+            m_Max = glm::max(m_Max, point);
         }
         else
         {
@@ -76,19 +76,19 @@ inline AABB& AABB::operator+=(const AABB& _other)
 
 
 // Returns the midpoint between the min and max points.
-inline Vector3f AABB::GetCenter() const
+inline glm::vec3 AABB::GetCenter() const
 {
     return (m_Min + m_Max) * 0.5f;
 }
 
 // Returns the extent around the center
-inline Vector3f AABB::GetExtent() const
+inline glm::vec3 AABB::GetExtent() const
 {
     return GetFullExtent() * 0.5f;
 }
 
 // Returns the full size of the box, from corner to corner.
-inline Vector3f AABB::GetFullExtent() const
+inline glm::vec3 AABB::GetFullExtent() const
 {
     return m_Max - m_Min;
 }

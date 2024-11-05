@@ -33,17 +33,17 @@ namespace StringCast
         return value;
     }
 
-    String ToString(const Math::Vector3f& value)
+    String ToString(const glm::vec3& value)
     {
         return StringUtils::StringFormat("(%f, %f, %f)", value.x, value.y, value.z);
     }
 
-    String ToString(const Math::Vector4f& value)
+    String ToString(const glm::vec4& value)
     {
         return StringUtils::StringFormat("(%f, %f, %f, %f)", value.x, value.y, value.z, value.w);
     }
 
-    String ToString(const Math::Quaternion& value)
+    String ToString(const glm::quat& value)
     {
         return StringUtils::StringFormat("(%f, %f, %f, %f)", value.x, value.y, value.z, value.w);
     }
@@ -75,25 +75,25 @@ namespace StringCast
     }
 
     template <>
-    Math::Vector3f FromString<Math::Vector3f>(const String& valueStr)
+    glm::vec3 FromString<glm::vec3>(const String& valueStr)
     {
-        Math::Vector3f ret;
+        glm::vec3 ret;
         sscanf_s(valueStr.c_str(), "(%f, %f, %f)", &ret.x, &ret.y, &ret.z);
         return ret;
     }
 
     template <>
-    Math::Vector4f FromString<Math::Vector4f>(const String& valueStr)
+    glm::vec4 FromString<glm::vec4>(const String& valueStr)
     {
-        Math::Vector4f ret;
+        glm::vec4 ret;
         sscanf_s(valueStr.c_str(), "(%f, %f, %f, %f)", &ret.x, &ret.y, &ret.z, &ret.w);
         return ret;
     }
 
     template <>
-    Math::Quaternion FromString<Math::Quaternion>(const String& valueStr)
+    glm::quat FromString<glm::quat>(const String& valueStr)
     {
-        Math::Quaternion ret;
+        glm::quat ret;
         sscanf_s(valueStr.c_str(), "(%f, %f, %f, %f)", &ret.x, &ret.y, &ret.z, &ret.w);
         return ret;
     }

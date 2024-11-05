@@ -1,7 +1,7 @@
 
 #pragma once
-#include <Math/Vector2f.h>
-#include <Math/Matrix44.h>
+#include <glm/vec2.hpp>
+#include <glm/mat4x4.hpp>
 #include <Memory/UniquePointer.h>
 
 namespace lyra
@@ -34,7 +34,7 @@ public:
     VulkanSystem(InitInfo _initInfo);
     ~VulkanSystem();
 
-    void OnResize(Math::Vector2f _size);
+    void OnResize(glm::vec2 _size);
 
     void BeginFrame();
     void EndFrame();
@@ -47,9 +47,9 @@ public:
     VulkanRenderPassManager& GetVulkanRenderPassManager() { return *m_renderPassManager; }
     VulkanShaderModuleManager& GetVulkanShaderModuleManager() { return *m_shaderModuleManager; }
 
-    static Math::Matrix44 FixProjectionMatrix(const Math::Matrix44 & _matrix)
+    static glm::mat4x4 FixProjectionMatrix(const glm::mat4x4 & _matrix)
     {
-        static const Math::Matrix44 clip
+        static const glm::mat4x4 clip
         {
             1.f,0.f,0.f,0.f,
             0.f,-1.f,0.f,0.f,

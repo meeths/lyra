@@ -26,6 +26,7 @@ project "lyra.external.tracy"
     -- End external libraries
     
     configureFlags()
+    configureCommonExternals()
     removeflags
     {
         "FatalCompileWarnings"

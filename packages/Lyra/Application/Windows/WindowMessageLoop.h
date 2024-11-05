@@ -1,5 +1,5 @@
 #pragma once
-#include <Math/Vector2i.h>
+#include <glm/vec2.hpp>
 #include <functional>
 #define WIN32_LEAN_AND_MEAN 1
 #include <windows.h>
@@ -13,7 +13,7 @@ class WindowMessageLoop
 public:
 	typedef struct
 	{
-		Function<void(const Math::Vector2i&)> mOnSizeChanged;
+		Function<void(const glm::ivec2&)> mOnSizeChanged;
 		Function<void(void)> mOnFocusLost;
 		Function<void(void)> mOnFocusGained;
 		Function<void(void)> mOnWindowClose;

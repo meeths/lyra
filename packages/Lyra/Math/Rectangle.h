@@ -1,6 +1,6 @@
 #pragma once
-#include <Math/Vector2f.h>
-#include <Math/Vector2i.h>
+#include <glm/vec2.hpp>
+#include <glm/vec2.hpp>
 namespace lyra
 {
 namespace Math

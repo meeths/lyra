@@ -10,7 +10,7 @@ namespace lyra
 
 namespace VulkanUtils
 {
-	inline unsigned int GetMipLevels(const Math::Vector2i& _dimensions)
+	inline unsigned int GetMipLevels(const glm::ivec2& _dimensions)
 	{
 		return static_cast<unsigned int>(Math::Floor(Math::Log2(Math::Max(_dimensions.x, _dimensions.y)))) + 1;
 	}

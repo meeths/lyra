@@ -28,6 +28,7 @@ project "lyra.external.imgui"
     -- End external libraries
 
     configureFlags()
+    configureCommonExternals()
     
     setConfigurations()
     

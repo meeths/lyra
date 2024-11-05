@@ -13,7 +13,7 @@ class WindowsApplication : public IApplication
 public:
 	struct CreationInfo
 	{
-		Math::Vector2i m_mainWindowSize{};
+		glm::ivec2 m_mainWindowSize{};
 		uint32 m_maxCoresPerExecutor = 4;		
 		bool m_fullScreen = false;
 		String m_windowName = "Lyra Application";

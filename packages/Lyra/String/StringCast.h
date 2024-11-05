@@ -5,9 +5,9 @@
 
 #include <String/String.h>
 
-#include <Math/Vector3f.h>
-#include <Math/Vector4f.h>
-#include <Math/Quaternion.h>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <Core/CoreDefines.h>
 
 namespace lyra
@@ -26,9 +26,9 @@ namespace StringCast
     String ToString(const float& value);
     String ToString(const String& value);
 
-    String ToString(const Math::Vector3f& value);
-    String ToString(const Math::Vector4f& value);
-    String ToString(const Math::Quaternion& value);
+    String ToString(const glm::vec3& value);
+    String ToString(const glm::vec4& value);
+    String ToString(const glm::quat& value);
 
 
     template <typename T>
@@ -47,11 +47,11 @@ namespace StringCast
     float FromString(const String& valueStr);
 
     template <>
-    Math::Vector3f FromString(const String& valueStr);
+    glm::vec3 FromString(const String& valueStr);
     template <>
-    Math::Vector4f FromString(const String& valueStr);
+    glm::vec4 FromString(const String& valueStr);
     template <>
-    Math::Quaternion FromString(const String& valueStr);
+    glm::quat FromString(const String& valueStr);
 
     template <>
     String FromString(const String& valueStr);

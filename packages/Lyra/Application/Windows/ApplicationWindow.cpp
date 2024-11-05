@@ -1,5 +1,5 @@
 #include <Application/Windows/ApplicationWindow.h>
-#include <Math/Vector2f.h>
+#include <glm/vec2.hpp>
 #include <Core/CoreDefines.h>
 #include <String/StringUtils.h>
 
@@ -7,12 +7,12 @@
 
 namespace lyra
 {
-    ApplicationWindow::ApplicationWindow(const Math::Vector2i& size, bool _fullscreen, const String& _windowName)
+    ApplicationWindow::ApplicationWindow(const glm::ivec2& size, bool _fullscreen, const String& _windowName)
     {
         mFullScreen = _fullscreen;
 
         WindowMessageLoop::InitInfo messageLoopInitInfo{
-            [this](const Math::Vector2i& size) { OnWindowResize(size); },
+            [this](const glm::ivec2& size) { OnWindowResize(size); },
             [this]() { OnLoseFocus(); },
             [this]() { OnGainFocus(); },
             [this]() { OnCloseWindow(); },
@@ -137,7 +137,7 @@ namespace lyra
                 const bool lButton = msg.wParam & MK_LBUTTON;
                 const bool rButton = msg.wParam & MK_RBUTTON;
                 const bool mButton = msg.wParam & MK_MBUTTON;
-                const Math::Vector2f mousePos(static_cast<float>(LOWORD(msg.lParam)), static_cast<float>(HIWORD(msg.lParam)));
+                const glm::vec2 mousePos(static_cast<float>(LOWORD(msg.lParam)), static_cast<float>(HIWORD(msg.lParam)));
 
                 const bool lAlt = GetAsyncKeyState(VK_LMENU) & 0x8000;
                 const bool lCtrl = GetAsyncKeyState(VK_LCONTROL) & 0x8000;
@@ -231,16 +231,16 @@ namespace lyra
         }
     }
 
-    Math::Vector2i ApplicationWindow::GetDimensions() const
+    glm::ivec2 ApplicationWindow::GetDimensions() const
     {
         RECT clientRect;
         GetClientRect(mHwnd, &clientRect);
         return { clientRect.right - clientRect.left, clientRect.bottom - clientRect.top };
     }
 
-    void ApplicationWindow::OnWindowResize(const Math::Vector2i& newSize)
+    void ApplicationWindow::OnWindowResize(const glm::ivec2& newSize)
     {
-        const Math::Vector2f windowSize(static_cast<float>(newSize.x), static_cast<float>(newSize.y));
+        const glm::vec2 windowSize(static_cast<float>(newSize.x), static_cast<float>(newSize.y));
         for (auto& resizeCallback : mResizeCallbacks)
         {
             resizeCallback(windowSize);

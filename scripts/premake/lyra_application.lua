@@ -25,7 +25,7 @@ project "lyra.app"
         postbuildcommands { "robocopy ../packages/LyraRender/shaders/GLSL %{cfg.buildtarget.directory}shaders /s /NJS /NJH /NDL /NP /NC /NS" }
 
     configureFlags()
-    
+    configureCommonExternals()
     -- External libraries
     includeTaskFlow()
     includeGLFW()
@@ -68,6 +68,7 @@ project "lyra.app.editor"
 
     filter {}
     configureFlags()
+    configureCommonExternals()    
     -- External libraries
     links { "lyra.external.imgui" }
     includeImGui()

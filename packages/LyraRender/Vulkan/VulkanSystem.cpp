@@ -80,7 +80,7 @@ namespace lyra
         m_vulkanInstance = nullptr;
     }
 
-    void VulkanSystem::OnResize(Math::Vector2f _size)
+    void VulkanSystem::OnResize(glm::vec2 _size)
     {
         ProfileScoped;
 

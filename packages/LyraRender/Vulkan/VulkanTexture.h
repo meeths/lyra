@@ -1,7 +1,7 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include <Vulkan/VulkanBuffer.h>
-#include <Math/Vector2i.h>
+#include <glm/vec2.hpp>
 #include <TextureTypes.h>
 // Created on 2018-12-24 by sisco
 
@@ -17,7 +17,7 @@ public:
     
     typedef struct CreationInfo
     {
-        Math::Vector2i m_Dimensions = {};
+        glm::ivec2 m_Dimensions = {};
         unsigned int m_MipLevels = 1;
         unsigned int m_numSamples = 1;
         TextureType m_TextureType = TextureType::Texture;

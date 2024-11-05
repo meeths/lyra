@@ -1,7 +1,7 @@
 #pragma once
 #include <Application/Windows/WindowMessageLoop.h>
 #include <Core/Types.h>
-#include <Math/Vector2i.h>
+#include <glm/vec2.hpp>
 #define WIN32_LEAN_AND_MEAN 1
 #include <windows.h>
 #include <Containers/Vector.h>
@@ -15,7 +15,7 @@ namespace lyra
 	class ApplicationWindow
 {
 public:
-	ApplicationWindow(const Math::Vector2i& size, bool _fullscreen, const String& _windowName);
+	ApplicationWindow(const glm::ivec2& size, bool _fullscreen, const String& _windowName);
 	
 	void RequestClose() { mCloseRequested = true; }
 	bool CloseRequested() const { return mCloseRequested; }
@@ -25,7 +25,7 @@ public:
 	HWND GetWindowHandle() const { return mHwnd; }
 	HINSTANCE GetInstanceHandle() const { return mApplicationHandle; }
 
-    typedef Function<void(Math::Vector2f, bool, bool, bool, unsigned int)> MouseMoveCallback;
+    typedef Function<void(glm::vec2, bool, bool, bool, unsigned int)> MouseMoveCallback;
     void AddMouseMoveCallback(MouseMoveCallback _onMouseMove) { mMouseMoveCallbacks.push_back(_onMouseMove); }
 
     typedef Function<void(float)> MouseWheelCallback;
@@ -33,7 +33,7 @@ public:
     void AddMouseMoveWheelHCallback(MouseWheelCallback _onMouseWheelH) { mMouseWheelHCallbacks.push_back(_onMouseWheelH); }
     
     
-	typedef Function<void(Math::Vector2f)> ResizeCallback;
+	typedef Function<void(glm::vec2)> ResizeCallback;
 	void AddResizeCallback(ResizeCallback _onResize) { mResizeCallbacks.push_back(_onResize); };
 
     typedef Function<void(Word)> KeyCallback;
@@ -44,11 +44,11 @@ public:
     void SetWindowTitle(StringView _title) const;
 	void ToggleFullscreen();
 
-    Math::Vector2i GetDimensions() const;
+    glm::ivec2 GetDimensions() const;
 private:
 	void OnSetWindowTitleEvent(ChangeWindowTitleEvent _event) const;
 
-	void OnWindowResize(const Math::Vector2i& newSize);
+	void OnWindowResize(const glm::ivec2& newSize);
 	void OnLoseFocus();
 	void OnGainFocus();
 	void OnCloseWindow();

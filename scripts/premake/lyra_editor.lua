@@ -22,7 +22,8 @@ project "lyra.editor"
     }
 
     configureFlags()
-
+    configureCommonExternals()
+    
     -- External libraries
    
     -- End external libraries

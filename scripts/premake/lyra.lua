@@ -18,7 +18,8 @@ project "lyra.core"
     }
 
     configureFlags()
-
+    configureCommonExternals()
+    
     -- External libraries
     includeTaskFlow()
     includeEntt()
@@ -54,7 +55,8 @@ project "lyra.render"
     links { "lyra.core" }
 
     configureFlags()
-    
+    configureCommonExternals()
+        
     -- External libraries
     includeTaskFlow()
     includeEntt()

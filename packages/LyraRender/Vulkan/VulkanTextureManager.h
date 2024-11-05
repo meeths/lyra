@@ -21,7 +21,7 @@ public:
 
     typedef struct BlitInfo
     {
-        Math::Vector2i m_Dimensions {};
+        glm::ivec2 m_Dimensions {};
         VkFormat m_SourceFormat = VK_FORMAT_UNDEFINED;
         const char* m_Data = nullptr;
     }BlitInfo;

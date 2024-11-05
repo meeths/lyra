@@ -26,6 +26,7 @@ project "lyra.tests"
     -- End external libraries
 
     configureFlags()
+    configureCommonExternals()
     setConfigurations()
 
     filter {}

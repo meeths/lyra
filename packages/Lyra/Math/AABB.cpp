@@ -3,10 +3,10 @@
 
 namespace lyra
 {
-    Math::AABB Math::AABB::GetTransformed(const Math::Matrix44& _matrix) const
+    Math::AABB Math::AABB::GetTransformed(const glm::mat4x4& _matrix) const
     {
         AABB ret;
-        Array<Vector3f, 8> boxVertices;
+        Array<glm::vec3, 8> boxVertices;
 
         boxVertices[0].x = m_Min.x; boxVertices[0].y = m_Min.y; boxVertices[0].z = m_Min.z;
         boxVertices[1].x = m_Min.x; boxVertices[1].y = m_Min.y; boxVertices[1].z = m_Max.z;
@@ -19,8 +19,8 @@ namespace lyra
 
         for (const auto& vertex : boxVertices)
         {
-            const Vector3f convertedVtx = _matrix * Vector3f(vertex.x, vertex.y, vertex.z);
-            ret += Vector3f(convertedVtx.x, convertedVtx.y, convertedVtx.z);
+            const glm::vec3 convertedVtx = _matrix * glm::vec4(vertex.x, vertex.y, vertex.z, 1.0);
+            ret += glm::vec3(convertedVtx.x, convertedVtx.y, convertedVtx.z);
         }
 
         return ret;
