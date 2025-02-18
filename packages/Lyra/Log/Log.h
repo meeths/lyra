@@ -9,6 +9,7 @@
 #define lyraLogError(x, ...) lyra::Log::Instance().LogError(x, __VA_ARGS__)
 #define lyraLogWarning(x, ...) lyra::Log::Instance().LogWarning(x, __VA_ARGS__)
 #define lyraLogInfo(x, ...) lyra::Log::Instance().LogInfo(x, __VA_ARGS__)
+#define lyraLogFlush() lyra::Log::Instance().Flush()
 
 namespace lyra
 {
@@ -28,6 +29,8 @@ public:
 	void NotifyError(StringView title, const char* fmt, ...) ;
 	void NotifyInfo(StringView title, const char* fmt, ...) ;
 	void NotifyProgress(StringView title, StringView body, uint32_t step, uint32_t numSteps);
+
+	void Flush();
 private:
 	
 	void LogDetail(LogType logType, const char* fmt, va_list args);

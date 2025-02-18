@@ -15,5 +15,6 @@ namespace lyra
 	public:
 		virtual ~ILogger() {}
 		virtual void Log(LogType logType, const String& _log) = 0;
+		virtual void Flush() = 0;
     };
 }

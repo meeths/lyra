@@ -38,5 +38,10 @@ namespace lyra
 
         std::cout << color << _log << RESET << '\n';
     }
+
+    void LoggerStdout::Flush()
+    {
+        std::cout << std::flush;
+    }
 }
 

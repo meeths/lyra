@@ -39,6 +39,14 @@ namespace lyra
 		va_end(args);
 	}
 
+	void Log::Flush()
+	{
+		for (auto& logger : m_Loggers)
+		{
+			logger->Flush();
+		}
+	}
+
 	void Log::LogDetail(LogType logType, const char* fmt, va_list args)
 	{
 		SRWScopedReadLock lock(m_loggersLock);

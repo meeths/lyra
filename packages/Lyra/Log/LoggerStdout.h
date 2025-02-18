@@ -13,6 +13,7 @@ class LoggerStdout : public ILogger
 public:
     ~LoggerStdout() override = default;
     void Log(LogType logType, const String& _log) override;
+    void Flush() override;
 };
 
 }

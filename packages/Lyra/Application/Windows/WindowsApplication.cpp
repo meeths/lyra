@@ -35,7 +35,7 @@ namespace
 namespace lyra
 {
 WindowsApplication::WindowsApplication(CreationInfo _creationInfo)	
-	: m_creationInfo{std::move(_creationInfo)}, m_taskGraphExecutor(_creationInfo.m_maxCoresPerExecutor)
+	: m_creationInfo{std::move(_creationInfo)}, m_taskGraphExecutor(m_creationInfo.m_maxCoresPerExecutor)
 {
 	m_applicationWindow = MakeUniquePointer<ApplicationWindow>(m_creationInfo.m_mainWindowSize, m_creationInfo.m_fullScreen, m_creationInfo.m_windowName);
 	m_taskGraphThreadObserver = m_taskGraphExecutor.make_observer<TaskGraphExecutorThreadObserver>("Observer", OnFrameGraphSetup, OnFrameGraphStart, OnFrameGraphEnd);

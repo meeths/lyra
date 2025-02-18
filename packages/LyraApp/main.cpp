@@ -1,13 +1,11 @@
 #include <Application/Windows/WindowsApplication.h>
 #include <Log/Log.h>
 #include <Log/LoggerStdout.h>
-#include <Vulkan/VulkanForwardRenderingPath.h>
-#include <Vulkan/VulkanSystem.h>
-#include <Vulkan/VulkanDevice.h>
-
-#include <Shaders/ShaderProgram.h>
 #include <Filesystem/FileSystem.h>
-#include <Vulkan/VulkanShaderModuleManager.h>
+
+#include "Renderer/ISurface.h"
+#include "Renderer/ITexture.h"
+#include "Renderer/Renderer.h"
 
 int main(int, char**)
 {
@@ -21,52 +19,64 @@ int main(int, char**)
     windowCreationInfo.m_windowName = "lyra App";
     auto application = lyra::WindowsApplication(windowCreationInfo);
 
-    const lyra::VulkanSystem::InitInfo vulkanInitInfo
+    lyra::Renderer renderer;
+    if(!renderer.Initialize({lyra::IDevice::DeviceType::Vulkan, "lyra sandbox app"}))
     {
-         application.GetMainWindow()
+        lyraLogError("Could not initialize renderer");
+        return -1;
+    }
+
+    auto swapchain = renderer.GetDevice()->CreateSurface(application.GetMainWindow().GetWindowHandle());
+    if(!swapchain)
+    {
+        lyraLogError("Could not create swapchain");
+        return -1;
+    }
+
+    lyra::SurfaceConfig surfaceConfig
+    {
+        .format= lyra::Format::Unknown,
+        .size= windowCreationInfo.m_mainWindowSize,
+        .vsync= true
     };
     
-    lyra::VulkanSystem vulkanInstance(vulkanInitInfo);
-
-    const lyra::VulkanForwardRenderingPath::InitInfo renderPathInitInfo
+    if (!(*swapchain)->Configure(surfaceConfig))
     {
-        vulkanInstance
-    };
-    lyra::VulkanForwardRenderingPath renderingPath(renderPathInitInfo);
-
-    renderingPath.Configure();
-
-
-    {
-        lyra::ShaderProgram program(lyra::ShaderConstants::ShaderType::VertexShader, lyra::FileSystem::GetExecutablePath() + "/shaders/common.vert", "main");
-            
-        program.AddDefine("PROJ_MATRIX_ONLY");
-        lyra::VulkanShaderModuleManager::ShaderModuleCreationInfo vsInfo {program};
-        vulkanInstance.GetVulkanShaderModuleManager().CreateShaderModule(lyra::String(lyra::ShaderBuiltinNames::kVertexShader_2D_PCT()), vsInfo);
-    }
-    {
-        lyra::ShaderProgram program(lyra::ShaderConstants::ShaderType::FragmentShader, lyra::FileSystem::GetExecutablePath() + "/shaders/basic.frag", "main");
-        lyra::VulkanShaderModuleManager::ShaderModuleCreationInfo fsInfo {program};
-        vulkanInstance.GetVulkanShaderModuleManager().CreateShaderModule(lyra::String(lyra::ShaderBuiltinNames::kFragmentShader_TextureColor()), fsInfo);
+        lyraLogError("Could not configure swapchain");
+        return -1;
     }
 
-    application.GetEngineLoop().AddExecutionUnit(
-        lyra::EngineLoop::Phase::PreRender,
-        lyra::Task([&vulkanInstance](float){vulkanInstance.BeginFrame();}));
+    constexpr uint32_t frameBufferCount = 2;
+    
+    for (uint32_t i = 0; i < frameBufferCount; ++i)
+    {
+        lyra::ITexture::Descriptor depthBufferDesc;
+        depthBufferDesc.type = lyra::IBaseResource::BaseResourceType::Texture;
+        depthBufferDesc.format = lyra::Format::D32_FLOAT;
+        depthBufferDesc.extents.width = windowCreationInfo.m_mainWindowSize.x;
+        depthBufferDesc.extents.height = windowCreationInfo.m_mainWindowSize.y;
+        depthBufferDesc.extents.depth = 1;
 
-    application.GetEngineLoop().AddExecutionUnit(
-        lyra::EngineLoop::Phase::Render,
-        lyra::Task([&renderingPath](float){renderingPath.Execute();}));
-
-    application.GetEngineLoop().AddExecutionUnit(
-        lyra::EngineLoop::Phase::EndFrame,
-        lyra::Task([&vulkanInstance](float)
-        {
-            vulkanInstance.EndFrame();
-            vulkanInstance.Present();
-        }));
+        renderer.GetDevice()->CreateTextureResource(depthBufferDesc);
+    }
+        
+    
+    // application.GetEngineLoop().AddExecutionUnit(
+    //     lyra::EngineLoop::Phase::PreRender,
+    //     lyra::Task([&vulkanInstance](float){vulkanInstance.BeginFrame();}));
+    //
+    // application.GetEngineLoop().AddExecutionUnit(
+    //     lyra::EngineLoop::Phase::Render,
+    //     lyra::Task([&renderingPath](float){renderingPath.Execute();}));
+    //
+    // application.GetEngineLoop().AddExecutionUnit(
+    //     lyra::EngineLoop::Phase::EndFrame,
+    //     lyra::Task([&vulkanInstance](float)
+    //     {
+    //         vulkanInstance.EndFrame();
+    //         vulkanInstance.Present();
+    //     }));
 
     application.Run();
-    vulkanInstance.GetVulkanDevice().WaitForDevice();
     return 0;
 }

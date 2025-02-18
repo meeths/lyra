@@ -8,6 +8,8 @@
 #include <Memory/UniquePointer.h>
 #include <String/String.h>
 
+#include "Application/WindowHandle.h"
+
 namespace lyra
 {
 	struct ChangeWindowTitleEvent;
@@ -22,7 +24,7 @@ public:
 	void Update();
 	void Shutdown();
 
-	HWND GetWindowHandle() const { return mHwnd; }
+	WindowHandle GetWindowHandle() const { return WindowHandle::FromHWND(mHwnd); }
 	HINSTANCE GetInstanceHandle() const { return mApplicationHandle; }
 
     typedef Function<void(glm::vec2, bool, bool, bool, unsigned int)> MouseMoveCallback;
