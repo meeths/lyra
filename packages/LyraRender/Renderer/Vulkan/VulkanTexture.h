@@ -15,7 +15,6 @@ public:
     VulkanTexture(const Descriptor& desc, vk::Device* device);
     ~VulkanTexture() override;
     
-    BaseResourceType GetBaseResourceType() const override { return BaseResourceType::Texture; }
     Descriptor* GetDescriptor() override { return &m_descriptor; }
 
     vk::Image m_vkImage;

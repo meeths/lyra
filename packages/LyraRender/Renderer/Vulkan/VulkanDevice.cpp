@@ -73,14 +73,14 @@ namespace Details
         return devices.at(bestDeviceIndex);
     }
     
-    VkBool32 DebugUtilsMessengerCallback( VkDebugUtilsMessageSeverityFlagBitsEXT       messageSeverity,
-                                                            VkDebugUtilsMessageTypeFlagsEXT              messageTypes,
-                                                            VkDebugUtilsMessengerCallbackDataEXT const * pCallbackData,
+    VkBool32 DebugUtilsMessengerCallback( vk::DebugUtilsMessageSeverityFlagBitsEXT       messageSeverity,
+                                                            vk::DebugUtilsMessageTypeFlagsEXT              messageTypes,
+                                                            vk::DebugUtilsMessengerCallbackDataEXT const * pCallbackData,
                                                             void * /*pUserData*/ )
     {
         lyra::String debugMessage = lyra::StringUtils::StringFormat("[Vulkan %s] %s: %s [ID%s%d]",
-                vk::to_string(static_cast<vk::DebugUtilsMessageSeverityFlagBitsEXT>(messageSeverity)).c_str(),
-                vk::to_string(static_cast<vk::DebugUtilsMessageTypeFlagsEXT>(messageTypes)).c_str(),
+                vk::to_string(messageSeverity).c_str(),
+                vk::to_string(messageTypes).c_str(),
                 pCallbackData->pMessage,
                 pCallbackData->pMessageIdName,
                 pCallbackData->messageIdNumber       
@@ -123,11 +123,11 @@ namespace Details
 
 
         
-        if(messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
+        if(messageSeverity & vk::DebugUtilsMessageSeverityFlagBitsEXT::eError)
         {
             lyraLogError(debugMessage.c_str());
         }
-        else if(messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
+        else if(messageSeverity & vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning)
         {
             lyraLogWarning(debugMessage.c_str());
         }

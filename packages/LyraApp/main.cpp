@@ -33,14 +33,14 @@ int main(int, char**)
         return -1;
     }
 
-    lyra::SurfaceConfig surfaceConfig
+    lyra::ISurface::Descriptor surfaceDescriptor
     {
-        .format= lyra::Format::Unknown,
+        .format= lyra::Format::R8G8B8A8_UNORM,
         .size= windowCreationInfo.m_mainWindowSize,
         .vsync= true
     };
     
-    if (!(*swapchain)->Configure(surfaceConfig))
+    if (!(*swapchain)->Configure(surfaceDescriptor))
     {
         lyraLogError("Could not configure swapchain");
         return -1;

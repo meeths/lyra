@@ -3,8 +3,7 @@
 --- Created by sisco.
 ---
 
-VULKAN_SDK_VERSION = "1.3.268.0"
--- VULKAN_SDK_VERSION = "1.2.198.1"
+VULKAN_SDK_VERSION = "1.4.304.1"
 
 function includeVulkan()
     includedirs { "%{BASE_DIR}external/vulkan_" .. VULKAN_SDK_VERSION .. "/Include" }

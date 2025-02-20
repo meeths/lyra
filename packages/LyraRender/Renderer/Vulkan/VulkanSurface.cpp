@@ -156,7 +156,7 @@ namespace lyra
         m_vkDevice->destroySwapchainKHR(m_vkSwapchain);
     }
 
-    bool VulkanSurface::Configure(SurfaceConfig config)
+    bool VulkanSurface::Configure(Descriptor config)
     {
         m_config = config;
         if (m_config.size.x == 0|| m_config.size.y == 0)

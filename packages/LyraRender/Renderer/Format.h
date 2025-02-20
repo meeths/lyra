@@ -316,16 +316,6 @@ namespace lyra
         return static_cast<TextureUsage>(static_cast<char>(lhs) & static_cast<char>(rhs));
     }
 
-    enum class ResourceType
-    {
-        Unknown,
-        Buffer,
-        Texture1D,
-        Texture2D,
-        Texture3D,
-        TextureCube
-    };
-
     enum class TextureType
     {
         Texture1D,

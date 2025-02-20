@@ -14,29 +14,31 @@ namespace lyra
 {
 class ITexture;
 
-struct SurfaceInfo
-{
-    Format preferredFormat;
-    TextureUsage supportedUsage;
-    Vector<Format> supportedFormats;
-};    
-
-struct SurfaceConfig
-{
-    Format format = Format::Unknown;
-    glm::ivec2 size = glm::ivec2(0);
-    bool vsync = true;
-    uint32_t desiredImageCount = 3;
-    TextureUsage usage = TextureUsage::RenderTarget;
-};
     
 class ISurface
 {
     public:
+
+    struct SurfaceInfo
+    {
+        Format preferredFormat;
+        TextureUsage supportedUsage;
+        Vector<Format> supportedFormats;
+    };    
+
+    struct Descriptor
+    {
+        Format format = Format::Unknown;
+        glm::ivec2 size = glm::ivec2(0);
+        bool vsync = true;
+        uint32_t desiredImageCount = 3;
+        TextureUsage usage = TextureUsage::RenderTarget;
+    };
+
     virtual ~ISurface() = default;
     virtual const SurfaceInfo& GetSurfaceInfo() = 0;
-    virtual const SurfaceConfig& GetSurfaceConfig() = 0;
-    virtual bool Configure(SurfaceConfig config) = 0;
+    virtual const Descriptor& GetSurfaceConfig() = 0;
+    virtual bool Configure(Descriptor config) = 0;
     virtual ITexture* GetTexture() = 0;
     virtual bool Present() = 0;
 };

@@ -22,15 +22,15 @@ public:
     void DestroySwapchain();
     
     const SurfaceInfo& GetSurfaceInfo() override { return m_info; }
-    const SurfaceConfig& GetSurfaceConfig() override { return m_config; }
-    bool Configure(SurfaceConfig config) override;
+    const Descriptor& GetSurfaceConfig() override { return m_config; }
+    bool Configure(Descriptor config) override;
     ITexture* GetTexture() override;
     bool Present() override;
 
 private:
 
     SurfaceInfo m_info {};
-    SurfaceConfig m_config = {};
+    Descriptor m_config = {};
     
     vk::Device* m_vkDevice = nullptr;
     vk::PhysicalDevice* m_vkPhysicalDevice = nullptr;

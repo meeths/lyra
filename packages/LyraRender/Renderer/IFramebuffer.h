@@ -1,7 +1,7 @@
 
 #pragma once
 #include "Renderer/Format.h"
-#include "Renderer/IResourceView.h"
+#include "Renderer/IRendererResourceView.h"
 #include "Containers/Vector.h"
 
 // Created on 2024-11-14 by sisco
@@ -30,8 +30,8 @@ public:
     
     struct IFramebufferInfo
     {
-        Vector<IResourceView*> const* renderTargetViews;
-        IResourceView* depthStencilView;
+        Vector<IRendererResourceView*> const* renderTargetViews;
+        IRendererResourceView* depthStencilView;
         IFramebufferLayout* layout;
     };
 };

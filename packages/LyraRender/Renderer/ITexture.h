@@ -40,6 +40,7 @@ public:
     };
 
     virtual Descriptor* GetDescriptor() = 0;
+    BaseResourceType GetBaseResourceType() const override { return BaseResourceType::Texture; }
 };
 
 }
