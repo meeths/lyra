@@ -13,7 +13,6 @@
     #define lyraAssert(x) assert(x)
 #else
     #define lyraAssert(x) do { (void)sizeof(x);} while (0)
-    #define lyraAssert(x, m) do { (void)sizeof(x); (void)sizeof(m);} while (0)
 #endif
 
 #define DefineGlobalConstexprVariableAccessor(classname, name, value)     inline static constexpr classname name()\

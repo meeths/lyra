@@ -1,13 +1,13 @@
 
 #pragma once
-#include "Renderer/IRendererResourceView.h"
+#include "Renderer/IRenderResourceView.h"
 
 // Created on 2024-11-14 by sisco
 
 namespace lyra
 {
 
-class IVulkanResourceView : IRendererResourceView
+class IVulkanResourceView : public IRenderResourceView
 {
 };
 

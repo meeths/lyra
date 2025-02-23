@@ -2,6 +2,7 @@
 #pragma once
 #include <glm/ext/matrix_float4x4.hpp>
 
+#include "IRenderResourceView.h"
 #include "Renderer/ITexture.h"
 #include "Application/WindowHandle.h"
 #include "Containers/Array.h"
@@ -84,7 +85,8 @@ public:
     virtual Expected<SharedPointer<ISurface>,StringView> CreateSurface(WindowHandle windowHandle) = 0;
     virtual Expected<SharedPointer<BufferResource>,StringView> CreateBufferResource(const BufferResource::Descriptor& desc, const void* initData) = 0;
     virtual Expected<SharedPointer<ITexture>,StringView> CreateTextureResource(ITexture::Descriptor& desc) = 0;
-    
+    virtual Expected<SharedPointer<IRenderResourceView>, StringView> CreateTextureView(ITexture* texture, const IRenderResourceView::Descriptor& desc) = 0;
+  
 
 protected:
     virtual bool Initialize(const InitInfoBase& desc) = 0;

@@ -23,6 +23,7 @@ public:
     
     const SurfaceInfo& GetSurfaceInfo() override { return m_info; }
     const Descriptor& GetSurfaceConfig() override { return m_config; }
+    size_t GetImageCount() const override { return m_images.size(); } 
     bool Configure(Descriptor config) override;
     ITexture* GetTexture() override;
     bool Present() override;

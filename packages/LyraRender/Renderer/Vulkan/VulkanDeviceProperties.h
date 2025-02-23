@@ -14,7 +14,6 @@ namespace lyra
     {
 
         extensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
-        extensions.push_back(VK_KHR_SHADER_NON_SEMANTIC_INFO_EXTENSION_NAME);
         
         auto deviceFeatures2 = device.getFeatures2<
             vk::PhysicalDeviceFeatures2,

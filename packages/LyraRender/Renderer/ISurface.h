@@ -38,6 +38,7 @@ class ISurface
     virtual ~ISurface() = default;
     virtual const SurfaceInfo& GetSurfaceInfo() = 0;
     virtual const Descriptor& GetSurfaceConfig() = 0;
+    virtual size_t GetImageCount() const = 0; 
     virtual bool Configure(Descriptor config) = 0;
     virtual ITexture* GetTexture() = 0;
     virtual bool Present() = 0;

@@ -8,6 +8,11 @@
 #include <Profiler/Profiler.h>
 
 #include "VulkanSurface.h"
+#include "VulkanTextureView.h"
+
+#ifdef _WIN32
+#include <dxgi1_2.h>
+#endif
 
 #ifndef VULKAN_HPP_DISPATCH_LOADER_DYNAMIC
 #error VULKAN_HPP_DISPATCH_LOADER_DYNAMIC is required
@@ -139,6 +144,26 @@ namespace Details
         return false;
     }
 
+    int FindMemoryTypeIndex(const vk::PhysicalDevice& device, uint32_t typeBits, vk::MemoryPropertyFlags properties)
+    {
+        lyraAssert(typeBits);
+
+        const int numMemoryTypes = static_cast<int>(device.getMemoryProperties().memoryTypeCount);
+
+        // bit holds current test bit against typeBits. Ie bit == 1 << typeBits
+
+        uint32_t bit = 1;
+        for (int i = 0; i < numMemoryTypes; ++i, bit += bit)
+        {
+            auto const& memoryType = device.getMemoryProperties().memoryTypes[i];
+            if ((typeBits & bit) && (memoryType.propertyFlags & properties) == properties)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
     int FindQueue(const vk::PhysicalDevice& device, vk::QueueFlags queueFlags)
     {
         for(uint32 i = 0; i < device.getQueueFamilyProperties().size(); i++)
@@ -199,6 +224,20 @@ namespace lyra
         imageInfo.usage = vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled; // TODO: calculate usage
         imageInfo.sharingMode = vk::SharingMode::eExclusive;
 
+        vk::ExternalMemoryImageCreateInfo externalMemoryImageCreateInfo;
+        vk::ExternalMemoryHandleTypeFlags extMemoryHandleType =
+#ifdef _WIN32
+            vk::ExternalMemoryHandleTypeFlagBits::eOpaqueWin32;
+#else
+            vk::ExternalMemoryHandleTypeFlagBits::eOpaqueFd;
+#endif
+        if (desc.isShared)
+        {
+            externalMemoryImageCreateInfo.pNext = nullptr;
+            externalMemoryImageCreateInfo.handleTypes = extMemoryHandleType;
+            imageInfo.pNext = &externalMemoryImageCreateInfo;
+        }
+        
         auto createImageResult = m_vkDevice.createImage(imageInfo);
         if (createImageResult.result != vk::Result::eSuccess)
         {
@@ -212,8 +251,69 @@ namespace lyra
         {
             return Unexpected<StringView>("Failed to get image memory requirements");
         }
+
+        // Allocate the memory
+        vk::MemoryPropertyFlags reqMemoryProperties;
+        int memoryTypeIndex = Details::FindMemoryTypeIndex(m_vkPhysicalDevice, memoryRequirements.memoryTypeBits, reqMemoryProperties);
+        assert(memoryTypeIndex >= 0);
+
+        //vk::MemoryPropertyFlags actualMemoryProperites = m_vkPhysicalDevice.getMemoryProperties().memoryTypes[memoryTypeIndex].propertyFlags;
+        vk::MemoryAllocateInfo allocInfo;
+        allocInfo.allocationSize = memoryRequirements.size;
+        allocInfo.memoryTypeIndex = memoryTypeIndex;
+#ifdef _WIN32
+        vk::ExportMemoryWin32HandleInfoKHR exportMemoryWin32HandleInfo;
+#endif
+        vk::ExportMemoryAllocateInfoKHR exportMemoryAllocateInfo;
         
+        if (desc.isShared)
+        {
+#ifdef _WIN32
+            exportMemoryWin32HandleInfo.pNext = nullptr;
+            exportMemoryWin32HandleInfo.pAttributes = nullptr;
+            exportMemoryWin32HandleInfo.dwAccess =
+                DXGI_SHARED_RESOURCE_READ | DXGI_SHARED_RESOURCE_WRITE;
+            exportMemoryWin32HandleInfo.name = nullptr;
+
+            exportMemoryAllocateInfo.pNext =
+                extMemoryHandleType & vk::ExternalMemoryHandleTypeFlagBits::eOpaqueWin32 ? &exportMemoryWin32HandleInfo : nullptr;
+#endif
+            exportMemoryAllocateInfo.handleTypes = extMemoryHandleType;
+            allocInfo.pNext = &exportMemoryAllocateInfo;
+        }
+        
+        auto allocateResults = m_vkDevice.allocateMemory(&allocInfo, nullptr, &vulkanTexture->m_vkDeviceMemory);
+        CHECK_VK_RESULT(allocateResults);
+
+        auto bindImageMemoryResult = m_vkDevice.bindImageMemory(vulkanTexture->m_vkImage, vulkanTexture->m_vkDeviceMemory, 0);
+        CHECK_VK_RESULT(bindImageMemoryResult);
+/*
+        {
+            auto defaultLayout = VulkanUtil::getImageLayoutFromState(desc.defaultState);
+            if (defaultLayout != VK_IMAGE_LAYOUT_UNDEFINED)
+            {
+                _transitionImageLayout(
+                    texture->m_image,
+                    format,
+                    *texture->getDesc(),
+                    VK_IMAGE_LAYOUT_UNDEFINED,
+                    defaultLayout);
+            }
+        }
+        m_deviceQueue.flushAndWait();
+  */      
         return vulkanTexture;
+    }
+
+    Expected<SharedPointer<IRenderResourceView>, StringView> VulkanDevice::CreateTextureView(ITexture* texture, const IRenderResourceView::Descriptor& desc)
+    {
+        auto textureView = MakeSharedPointer<VulkanTextureView>();
+        if (textureView->Initialize(&m_vkDevice, static_cast<VulkanTexture*>(texture), desc))
+        {
+            
+            return Unexpected<StringView>("Failed to initialize VulkanTextureView");
+        }
+        return textureView;
     }
 
     Expected<SharedPointer<ISurface>, StringView> VulkanDevice::CreateSurface(WindowHandle windowHandle)

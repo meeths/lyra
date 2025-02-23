@@ -7,10 +7,10 @@
 namespace lyra
 {
 
-class IRendererResourceView
+class IRenderResourceView
 {
 public:
-    virtual ~IRendererResourceView() = default;
+    virtual ~IRenderResourceView() = default;
 
     enum class ViewType
     {

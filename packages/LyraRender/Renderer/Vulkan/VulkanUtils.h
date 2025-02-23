@@ -22,6 +22,7 @@ public:
     static vk::ImageUsageFlags TranslateToVkImageUsageFlags(TextureUsage usage);
     static ITexture::Descriptor SanitizeTextureDescriptor(const ITexture::Descriptor& desc);
     static int CalculateMipLevels(const ITexture::Extents& extents);
+    static vk::ImageAspectFlags GetVkAspectFlagsFromFormat(vk::Format format);
 };
 
 }

@@ -20,6 +20,7 @@ namespace lyra
 
     void VulkanTexture::Destroy()
     {
+        m_vkDevice->freeMemory(m_vkDeviceMemory);
         m_vkDevice->destroyImage(m_vkImage, nullptr);
         m_vkImage = nullptr;
     }

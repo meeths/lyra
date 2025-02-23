@@ -246,3 +246,22 @@ int lyra::VulkanUtils::CalculateMipLevels(const ITexture::Extents& extents)
     int32 maxSize = Math::Max(Math::Max(extents.width, extents.height), extents.depth);
     return Math::Log2(maxSize);
 }
+
+vk::ImageAspectFlags lyra::VulkanUtils::GetVkAspectFlagsFromFormat(vk::Format format)
+{
+    switch (format)
+    {
+    case vk::Format::eD16UnormS8Uint:
+    case vk::Format::eD24UnormS8Uint:
+    case vk::Format::eD32SfloatS8Uint:
+        return vk::ImageAspectFlagBits::eDepth | vk::ImageAspectFlagBits::eStencil;
+    case vk::Format::eD16Unorm:
+    case vk::Format::eD32Sfloat:
+    case vk::Format::eX8D24UnormPack32:
+        return vk::ImageAspectFlagBits::eDepth;
+    case vk::Format::eS8Uint:
+        return vk::ImageAspectFlagBits::eStencil;
+    default:
+        return vk::ImageAspectFlagBits::eColor;
+    }
+}

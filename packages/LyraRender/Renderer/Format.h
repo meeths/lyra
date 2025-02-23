@@ -388,5 +388,28 @@ namespace lyra
         size_t offset;
         size_t size;
     };
+
+    inline bool IsTypelessFormat(Format format)
+    {
+        switch (format)
+        {
+        case Format::R32G32B32A32_TYPELESS:
+        case Format::R32G32B32_TYPELESS:
+        case Format::R32G32_TYPELESS:
+        case Format::R32_TYPELESS:
+
+        case Format::R16G16B16A16_TYPELESS:
+        case Format::R16G16_TYPELESS:
+        case Format::R16_TYPELESS:
+
+        case Format::R8G8B8A8_TYPELESS:
+        case Format::R8G8_TYPELESS:
+        case Format::R8_TYPELESS:
+        case Format::B8G8R8A8_TYPELESS:
+            return true;
+        default:
+            return false;
+        }
+    }
 }
 

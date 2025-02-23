@@ -23,6 +23,7 @@ public:
     Expected<SharedPointer<ISurface>, StringView> CreateSurface(WindowHandle windowHandle) override;
     Expected<SharedPointer<BufferResource>, StringView> CreateBufferResource(const BufferResource::Descriptor& desc, const void* initData) override;
     Expected<SharedPointer<ITexture>, StringView> CreateTextureResource(ITexture::Descriptor& desc) override;
+    Expected<SharedPointer<IRenderResourceView>, StringView> CreateTextureView(ITexture* texture, const IRenderResourceView::Descriptor& desc) override;
 
     void WaitForGPU() override;
 

@@ -46,7 +46,7 @@ int main(int, char**)
         return -1;
     }
 
-    constexpr uint32_t frameBufferCount = 2;
+    const uint32_t frameBufferCount = swapchain->get()->GetImageCount();
     
     for (uint32_t i = 0; i < frameBufferCount; ++i)
     {
@@ -57,7 +57,14 @@ int main(int, char**)
         depthBufferDesc.extents.height = windowCreationInfo.m_mainWindowSize.y;
         depthBufferDesc.extents.depth = 1;
 
-        renderer.GetDevice()->CreateTextureResource(depthBufferDesc);
+        auto depthTexture = renderer.GetDevice()->CreateTextureResource(depthBufferDesc);
+
+        lyra::IRenderResourceView::Descriptor dsvDesc = {};
+        dsvDesc.type = lyra::IRenderResourceView::ViewType::DepthStencil;
+        dsvDesc.subresourceRange.mipLevelCount = 1;
+        dsvDesc.format = lyra::Format::D32_FLOAT;
+        
+        renderer.GetDevice()->CreateTextureView(depthTexture.value().get(), dsvDesc);
     }
         
     
