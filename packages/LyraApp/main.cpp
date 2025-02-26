@@ -56,6 +56,7 @@ int main(int, char**)
         depthBufferDesc.extents.width = windowCreationInfo.m_mainWindowSize.x;
         depthBufferDesc.extents.height = windowCreationInfo.m_mainWindowSize.y;
         depthBufferDesc.extents.depth = 1;
+        depthBufferDesc.state = lyra::ResourceState::DepthWrite;
 
         auto depthTexture = renderer.GetDevice()->CreateTextureResource(depthBufferDesc);
 

@@ -221,7 +221,7 @@ namespace lyra
         imageInfo.samples = static_cast<vk::SampleCountFlagBits>(desc.sampleDesc.numSamples);
 
         imageInfo.tiling = vk::ImageTiling::eOptimal;
-        imageInfo.usage = vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled; // TODO: calculate usage
+        imageInfo.usage = VulkanUtils::GetImageUsageFlags(desc.state);
         imageInfo.sharingMode = vk::SharingMode::eExclusive;
 
         vk::ExternalMemoryImageCreateInfo externalMemoryImageCreateInfo;
@@ -287,21 +287,22 @@ namespace lyra
 
         auto bindImageMemoryResult = m_vkDevice.bindImageMemory(vulkanTexture->m_vkImage, vulkanTexture->m_vkDeviceMemory, 0);
         CHECK_VK_RESULT(bindImageMemoryResult);
-/*
+
+        // If this texture does not have any pixels it's probably a target.
         {
-            auto defaultLayout = VulkanUtil::getImageLayoutFromState(desc.defaultState);
-            if (defaultLayout != VK_IMAGE_LAYOUT_UNDEFINED)
+            auto defaultLayout = VulkanUtils::GetImageLayoutFromState(desc.state);
+            if (defaultLayout != vk::ImageLayout::eUndefined)
             {
-                _transitionImageLayout(
-                    texture->m_image,
-                    format,
-                    *texture->getDesc(),
-                    VK_IMAGE_LAYOUT_UNDEFINED,
+                TransitionImageLayout(*m_vulkanDeviceQueue.GetCommandBuffer(),
+                    vulkanTexture->m_vkImage,
+                    vkFormat,
+                    *vulkanTexture->GetDescriptor(),
+                    vk::ImageLayout::eUndefined,
                     defaultLayout);
             }
         }
-        m_deviceQueue.flushAndWait();
-  */      
+        m_vulkanDeviceQueue.FlushAndWait();
+        
         return vulkanTexture;
     }
 
@@ -509,6 +510,36 @@ namespace lyra
         m_vkDefaultSampler = samplerResult.value;
        
         return true;
+    }
+
+    void VulkanDevice::TransitionImageLayout(vk::CommandBuffer commandBuffer, vk::Image image, vk::Format format, const ITexture::Descriptor& desc, vk::ImageLayout oldLayout, vk::ImageLayout newLayout)
+    {
+        if (oldLayout == newLayout)
+            return;
+
+        vk::ImageMemoryBarrier barrier;
+        barrier.oldLayout = oldLayout;
+        barrier.newLayout = newLayout;
+        barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        barrier.image = image;
+
+        barrier.subresourceRange.aspectMask = VulkanUtils::GetAspectMaskFromFormat(format);
+
+        barrier.subresourceRange.baseMipLevel = 0;
+        barrier.subresourceRange.levelCount = desc.mipLevels;
+        barrier.subresourceRange.baseArrayLayer = 0;
+        barrier.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+        barrier.srcAccessMask = VulkanUtils::GetAccessFlagsFromImageLayout(oldLayout);
+        barrier.dstAccessMask = VulkanUtils::GetAccessFlagsFromImageLayout(newLayout);
+
+        vk::PipelineStageFlags sourceStage = VulkanUtils::GetPipelineStageFlagsFromImageLayout(oldLayout);
+        vk::PipelineStageFlags destinationStage = VulkanUtils::GetPipelineStageFlagsFromImageLayout(newLayout);
+
+        vkCmdPipelineBarrier(commandBuffer, static_cast<VkPipelineStageFlags>(sourceStage), static_cast<VkPipelineStageFlags>(destinationStage), 0,
+            0, nullptr,
+            0, nullptr,
+            1, reinterpret_cast<VkImageMemoryBarrier*>(&barrier));    
     }
 }
 

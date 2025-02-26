@@ -23,6 +23,14 @@ public:
     static ITexture::Descriptor SanitizeTextureDescriptor(const ITexture::Descriptor& desc);
     static int CalculateMipLevels(const ITexture::Extents& extents);
     static vk::ImageAspectFlags GetVkAspectFlagsFromFormat(vk::Format format);
+    static vk::ImageLayout GetImageLayoutFromState(ResourceState state);
+    static vk::AccessFlags GetAccessFlagsFromImageLayout(vk::ImageLayout layout);
+    static vk::PipelineStageFlags GetPipelineStageFlagsFromImageLayout(vk::ImageLayout layout);
+    static vk::ImageAspectFlags GetAspectMaskFromFormat(vk::Format format, TextureAspect aspect = TextureAspect::All);
+    static vk::ImageUsageFlagBits GetImageUsageFlags(TextureUsage usage);
+    static vk::ImageUsageFlags GetImageUsageFlags(TextureUsage usage, MemoryType memoryType, const void* initData);
+    static vk::ImageUsageFlagBits GetImageUsageFlags(ResourceState state);
+
 };
 
 }

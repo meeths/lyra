@@ -265,3 +265,197 @@ vk::ImageAspectFlags lyra::VulkanUtils::GetVkAspectFlagsFromFormat(vk::Format fo
         return vk::ImageAspectFlagBits::eColor;
     }
 }
+
+vk::ImageLayout lyra::VulkanUtils::GetImageLayoutFromState(ResourceState state)
+{
+    switch (state)
+    {
+    case ResourceState::ShaderResource:
+        return vk::ImageLayout::eShaderReadOnlyOptimal;
+    case ResourceState::UnorderedAccess:
+    case ResourceState::General:
+        return vk::ImageLayout::eGeneral;
+    case ResourceState::Present:
+        return vk::ImageLayout::ePresentSrcKHR;
+    case ResourceState::CopySource:
+        return vk::ImageLayout::eTransferSrcOptimal;
+    case ResourceState::CopyDestination:
+        return vk::ImageLayout::eTransferDstOptimal;
+    case ResourceState::RenderTarget:
+        return vk::ImageLayout::eColorAttachmentOptimal;
+    case ResourceState::DepthWrite:
+        return vk::ImageLayout::eDepthStencilAttachmentOptimal;
+    case ResourceState::DepthRead:
+        return vk::ImageLayout::eDepthStencilReadOnlyOptimal;
+    case ResourceState::ResolveSource:
+        return vk::ImageLayout::eTransferSrcOptimal;
+    case ResourceState::ResolveDestination:
+        return vk::ImageLayout::eTransferDstOptimal;
+    default:
+        return vk::ImageLayout::eUndefined;
+    }
+}
+
+vk::AccessFlags lyra::VulkanUtils::GetAccessFlagsFromImageLayout(vk::ImageLayout layout)
+{
+    switch (layout)
+    {
+    case vk::ImageLayout::eUndefined:
+    case vk::ImageLayout::eGeneral:
+    case vk::ImageLayout::ePreinitialized:
+    case vk::ImageLayout::ePresentSrcKHR:
+        return (vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite);
+    case vk::ImageLayout::eColorAttachmentOptimal:
+        return (vk::AccessFlagBits::eColorAttachmentRead | vk::AccessFlagBits::eColorAttachmentWrite);
+    case vk::ImageLayout::eDepthStencilAttachmentOptimal:
+    case vk::ImageLayout::eDepthAttachmentOptimal:
+    case vk::ImageLayout::eStencilAttachmentOptimal:
+    case vk::ImageLayout::eDepthReadOnlyStencilAttachmentOptimal:
+    case vk::ImageLayout::eDepthAttachmentStencilReadOnlyOptimal:
+        return (vk::AccessFlagBits::eDepthStencilAttachmentWrite | vk::AccessFlagBits::eDepthStencilAttachmentRead);
+    case vk::ImageLayout::eDepthStencilReadOnlyOptimal:
+    case vk::ImageLayout::eDepthReadOnlyOptimalKHR:
+    case vk::ImageLayout::eStencilReadOnlyOptimal:
+        return vk::AccessFlagBits::eDepthStencilAttachmentRead;
+    case vk::ImageLayout::eShaderReadOnlyOptimal:
+        return vk::AccessFlagBits::eShaderRead;
+    case vk::ImageLayout::eTransferSrcOptimal:
+        return vk::AccessFlagBits::eTransferRead;
+    case vk::ImageLayout::eTransferDstOptimal:
+        return vk::AccessFlagBits::eTransferWrite;
+    default:
+        lyraAssert(0 && "Unsupported VkImageLayout");
+        return (vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite);
+    }
+}
+
+vk::PipelineStageFlags lyra::VulkanUtils::GetPipelineStageFlagsFromImageLayout(vk::ImageLayout layout)
+{
+    switch (layout)
+    {
+    case vk::ImageLayout::eUndefined:
+    case vk::ImageLayout::ePreinitialized:
+    case vk::ImageLayout::ePresentSrcKHR:
+    case vk::ImageLayout::eGeneral:
+        return vk::PipelineStageFlagBits::eAllCommands;
+    case vk::ImageLayout::eColorAttachmentOptimal:
+        return vk::PipelineStageFlagBits::eColorAttachmentOutput;
+    case vk::ImageLayout::eShaderReadOnlyOptimal:
+        return (vk::PipelineStageFlagBits::eAllGraphics | vk::PipelineStageFlagBits::eComputeShader);
+    case vk::ImageLayout::eTransferSrcOptimal:
+        return vk::PipelineStageFlagBits::eTransfer;
+    case vk::ImageLayout::eTransferDstOptimal:
+        return vk::PipelineStageFlagBits::eTransfer;
+    case vk::ImageLayout::eDepthStencilAttachmentOptimal:
+    case vk::ImageLayout::eDepthStencilReadOnlyOptimal:
+    case vk::ImageLayout::eDepthReadOnlyStencilAttachmentOptimal:
+    case vk::ImageLayout::eDepthAttachmentStencilReadOnlyOptimal:
+    case vk::ImageLayout::eDepthAttachmentOptimal:
+    case vk::ImageLayout::eDepthReadOnlyOptimal:
+    case vk::ImageLayout::eStencilAttachmentOptimal:
+    case vk::ImageLayout::eStencilReadOnlyOptimal:
+        return (vk::PipelineStageFlagBits::eEarlyFragmentTests | vk::PipelineStageFlagBits::eLateFragmentTests);
+    default:
+        lyraAssert(0 && "Unsupported VkImageLayout");
+        return vk::PipelineStageFlagBits::eAllCommands;
+    }    
+}
+
+vk::ImageAspectFlags lyra::VulkanUtils::GetAspectMaskFromFormat(vk::Format format, TextureAspect aspect)
+{
+    switch (aspect)
+    {
+    case TextureAspect::All:
+        switch (format)
+        {
+        case vk::Format::eD16UnormS8Uint:
+        case vk::Format::eD24UnormS8Uint:
+    case vk::Format::eD32SfloatS8Uint:
+            return vk::ImageAspectFlagBits::eDepth | vk::ImageAspectFlagBits::eStencil;
+        case vk::Format::eD16Unorm:
+        case vk::Format::eD32Sfloat:
+        case vk::Format::eX8D24UnormPack32:
+            return vk::ImageAspectFlagBits::eDepth;
+        case vk::Format::eS8Uint:
+            return vk::ImageAspectFlagBits::eStencil;
+        default:
+            return vk::ImageAspectFlagBits::eColor;
+        }
+    case TextureAspect::Depth:
+        return vk::ImageAspectFlagBits::eDepth;
+    case TextureAspect::Stencil:
+        return vk::ImageAspectFlagBits::eStencil;
+    default:
+        return vk::ImageAspectFlagBits::eColor;
+    }
+}
+
+vk::ImageUsageFlagBits lyra::VulkanUtils::GetImageUsageFlags(lyra::TextureUsage usage)
+{
+    int flags = 0;
+    if (IS_SET(usage, lyra::TextureUsage::ShaderResource))
+        flags |= (int)vk::ImageUsageFlagBits::eSampled;
+    if (IS_SET(usage, lyra::TextureUsage::UnorderedAccess))
+        flags |= (int)vk::ImageUsageFlagBits::eStorage;
+    if (IS_SET(usage, lyra::TextureUsage::RenderTarget))
+        flags |= (int)vk::ImageUsageFlagBits::eColorAttachment;
+    if (IS_SET(usage, lyra::TextureUsage::DepthRead))
+        flags |= (int)vk::ImageUsageFlagBits::eInputAttachment;
+    if (IS_SET(usage, lyra::TextureUsage::DepthWrite))
+        flags |= (int)vk::ImageUsageFlagBits::eDepthStencilAttachment;
+    if (IS_SET(usage, lyra::TextureUsage::Present))
+        flags |= (int)vk::ImageUsageFlagBits::eTransferSrc;
+    if (IS_SET(usage, lyra::TextureUsage::CopySource))
+        flags |= (int)vk::ImageUsageFlagBits::eTransferSrc;
+    if (IS_SET(usage, lyra::TextureUsage::CopyDestination))
+        flags |= (int)vk::ImageUsageFlagBits::eTransferDst;
+    if (IS_SET(usage, lyra::TextureUsage::ShaderResource))
+    if (IS_SET(usage, lyra::TextureUsage::ResolveSource))
+        flags |= (int)vk::ImageUsageFlagBits::eTransferSrc;
+    if (IS_SET(usage, lyra::TextureUsage::ResolveDestination))
+        flags |= (int)vk::ImageUsageFlagBits::eTransferDst;
+    return static_cast<vk::ImageUsageFlagBits>(flags);
+}
+
+vk::ImageUsageFlags lyra::VulkanUtils::GetImageUsageFlags(TextureUsage usage, MemoryType memoryType, const void* initData)
+{
+    int imageUsageFlags = static_cast<int>(GetImageUsageFlags(usage));
+    if (memoryType == MemoryType::Upload || initData)
+    {
+        imageUsageFlags |= static_cast<int>(vk::ImageUsageFlagBits::eTransferDst);
+    }
+
+    return static_cast<vk::ImageUsageFlags>(imageUsageFlags);
+}
+
+vk::ImageUsageFlagBits lyra::VulkanUtils::GetImageUsageFlags(lyra::ResourceState state)
+{
+    switch (state)
+    {
+    case lyra::ResourceState::RenderTarget:
+        return vk::ImageUsageFlagBits::eColorAttachment;
+    case lyra::ResourceState::DepthWrite:
+        return vk::ImageUsageFlagBits::eDepthStencilAttachment;
+    case lyra::ResourceState::DepthRead:
+        return vk::ImageUsageFlagBits::eInputAttachment;
+    case lyra::ResourceState::ShaderResource:
+        return vk::ImageUsageFlagBits::eSampled;
+    case lyra::ResourceState::UnorderedAccess:
+        return vk::ImageUsageFlagBits::eStorage;
+    case lyra::ResourceState::CopySource:
+    case lyra::ResourceState::ResolveSource:
+    case lyra::ResourceState::Present:
+        return vk::ImageUsageFlagBits::eTransferSrc;
+    case lyra::ResourceState::CopyDestination:
+    case lyra::ResourceState::ResolveDestination:
+        return vk::ImageUsageFlagBits::eTransferDst;
+    case lyra::ResourceState::Undefined:
+    case lyra::ResourceState::General:
+        return static_cast<vk::ImageUsageFlagBits>(0);
+    default:
+        {
+            lyraAssert(0 && "Unsupported Resource state");
+            return static_cast<vk::ImageUsageFlagBits>(0);
+        }
+    }
+}

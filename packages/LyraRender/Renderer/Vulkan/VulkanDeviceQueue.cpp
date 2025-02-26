@@ -69,6 +69,12 @@ namespace lyra
         CHECK_VK_RESULT(queueWaitResult);
     }
 
+    void VulkanDeviceQueue::FlushAndWait()
+    {
+        Flush();
+        WaitForGPU();
+    }
+
     void VulkanDeviceQueue::FlushCurrentCommandBuffer()
     {
         auto commandBufferEndResults = m_currentCommandBuffer->end();

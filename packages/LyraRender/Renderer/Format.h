@@ -372,6 +372,7 @@ namespace lyra
         Plane2 = 0x00000040,
 
         DepthStencil = Depth | Stencil,
+        All = Color | Depth | Stencil | MetaData | Plane0 | Plane1 | Plane2
     };
     
     struct SubresourceRange

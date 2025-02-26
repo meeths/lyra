@@ -17,6 +17,9 @@ public:
 
     void Flush();
     void WaitForGPU() const;
+    void FlushAndWait();
+
+    vk::CommandBuffer* GetCommandBuffer() { return &m_commandBuffers[m_currentCommandBufferIndex]; }
 private:
 
     void FlushCurrentCommandBuffer();

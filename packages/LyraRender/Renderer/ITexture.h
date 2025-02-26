@@ -30,6 +30,7 @@ public:
         int mipLevels = 0;
         Format format = Format::Unknown;
         SampleDesc sampleDesc;
+        ResourceState state = ResourceState::Undefined;
     };
 
     struct SubResourceData

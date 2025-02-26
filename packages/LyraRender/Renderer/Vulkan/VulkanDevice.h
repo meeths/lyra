@@ -31,6 +31,7 @@ private:
 
     bool InitializeInstanceAndDevice(const InitInfoBase& desc);
 
+    void TransitionImageLayout(vk::CommandBuffer commandBuffer, vk::Image image, vk::Format format, const ITexture::Descriptor& desc, vk::ImageLayout oldLayout, vk::ImageLayout newLayout);
 
 private:
     DeviceInfo m_deviceInfo = {};
@@ -45,6 +46,6 @@ private:
     
     vk::DebugUtilsMessengerEXT m_vkDebugMessenger;
 };
-
+    
 }
 
